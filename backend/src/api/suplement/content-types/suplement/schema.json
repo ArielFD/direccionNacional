@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "suplements",
+  "info": {
+    "singularName": "suplement",
+    "pluralName": "suplements",
+    "displayName": "suplement",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "noContrato": {
+      "type": "string"
+    },
+    "tipoContrato": {
+      "type": "string"
+    },
+    "pago": {
+      "type": "string"
+    },
+    "valor": {
+      "type": "decimal"
+    },
+    "firma": {
+      "type": "date"
+    },
+    "vencimiento": {
+      "type": "date"
+    },
+    "objetoContrato": {
+      "type": "string"
+    },
+    "dictamenLegal": {
+      "type": "string"
+    },
+    "acta": {
+      "type": "string"
+    },
+    "fechaActa": {
+      "type": "date"
+    },
+    "acuerdo": {
+      "type": "text"
+    },
+    "observaciones": {
+      "type": "text"
+    },
+    "contract": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::contract.contract",
+      "inversedBy": "suplements"
+    }
+  }
+}

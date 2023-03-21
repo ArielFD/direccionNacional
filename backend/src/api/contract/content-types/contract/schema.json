@@ -1,0 +1,99 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contracts",
+  "info": {
+    "singularName": "contract",
+    "pluralName": "contracts",
+    "displayName": "contract",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "numProveedor": {
+      "type": "string"
+    },
+    "tipoContrato": {
+      "type": "string"
+    },
+    "domicilioLegal": {
+      "type": "string"
+    },
+    "codREEUP": {
+      "type": "string"
+    },
+    "codNIT": {
+      "type": "string"
+    },
+    "cuentaBancaria": {
+      "type": "string"
+    },
+    "titular": {
+      "type": "string"
+    },
+    "agenciaBancaria": {
+      "type": "string"
+    },
+    "banco": {
+      "type": "string"
+    },
+    "bancoSitio": {
+      "type": "string"
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "correo": {
+      "type": "email"
+    },
+    "pago": {
+      "type": "string"
+    },
+    "valor": {
+      "type": "decimal"
+    },
+    "firma": {
+      "type": "date"
+    },
+    "vencimiento": {
+      "type": "date"
+    },
+    "objetoContrato": {
+      "type": "string"
+    },
+    "suplements": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::suplement.suplement",
+      "mappedBy": "contract"
+    },
+    "clasificacionContrato": {
+      "type": "string"
+    },
+    "dictamenLegal": {
+      "type": "string"
+    },
+    "acta": {
+      "type": "string"
+    },
+    "fechaActa": {
+      "type": "date"
+    },
+    "acuerdo": {
+      "type": "text"
+    },
+    "observaciones": {
+      "type": "text"
+    },
+    "empresa": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::empresa.empresa"
+    },
+    "tipoProveedor": {
+      "type": "string"
+    }
+  }
+}
