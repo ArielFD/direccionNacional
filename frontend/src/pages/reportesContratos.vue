@@ -24,8 +24,19 @@
                     <div class="col-2 q-pa-xs" v-if="state.opcion == 'No Proveedor'">
                         <q-input filled dense v-model="state.noProveedor" label="No Proveedor" class="col-2" />
                     </div>
+                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Empresa'">
+                        <q-select class="col-6" use-input input-debounce="0" dense filled v-model="state.empresa"
+                            :options="state.empresas" @filter="filterEmpresa" label="Empresa">
+                        </q-select>
+                    </div>
                     <div class="col-2 q-pa-xs" v-if="state.opcion == 'Suplementos por contrato'">
                         <q-input filled dense v-model="state.noProveedorSup" label="No Proveedor" class="col-2" />
+                    </div>
+                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Especificos por contrato'">
+                        <q-input filled dense v-model="state.noProveedorSup" label="No Proveedor" class="col-2" />
+                    </div>
+                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Suplementos por especifico'">
+                        <q-input filled dense v-model="state.noProveedorSup" label="No de especifico" class="col-2" />
                     </div>
                     <div class="col-2 q-pa-xs" v-if="state.opcion == 'Clasificacion de contrato'">
                         <q-select filled dense v-model="state.clasificacionContrato" :options="state.clasificacionContratos"
@@ -103,6 +114,101 @@ const columnsProveedor = [
         required: true,
         align: "center",
         label: "No Proveedor",
+        field: "No",
+        sortable: true,
+    },
+    {
+        name: "empresa",
+        align: "center",
+        label: "Empresa",
+        field: "empresa",
+        sortable: true,
+    },
+    {
+        name: "clasContrato",
+        align: "center",
+        label: "Clasificacion de contrato",
+        field: "clasContrato",
+        sortable: true,
+    },
+    {
+        name: "tipoProveedor",
+        align: "center",
+        label: "Tipo de proveedor",
+        field: "tipoProveedor",
+        sortable: true,
+    },
+    {
+        name: "dictLegal",
+        align: "center",
+        label: "Dictamen legal",
+        field: "dictLegal",
+        sortable: true,
+    },
+    {
+        name: "acta",
+        align: "center",
+        label: "Acta",
+        field: "acta",
+        sortable: true,
+    },
+    {
+        name: "objetoContrato",
+        align: "center",
+        label: "Objeto del contrato",
+        field: "objetoContrato",
+        sortable: true,
+    },
+    {
+        name: "tipoContrato",
+        align: "center",
+        label: "Tipo del contrato",
+        field: "tipoContrato",
+        sortable: true,
+    },
+    {
+        name: "importeContrato",
+        align: "center",
+        label: "Importe del contrato",
+        field: "importeContrato",
+        sortable: true,
+    },
+    {
+        name: "firma",
+        align: "center",
+        label: "Fecha de firma",
+        field: "firma",
+        sortable: true,
+    },
+    {
+        name: "vencimiento",
+        align: "center",
+        label: "Fecha de vencimiento",
+        field: "vencimiento",
+        sortable: true,
+    },
+    {
+        name: "cantidadEspecificos",
+        align: "center",
+        label: "Cantidad de especificos",
+        field: "cantidadEspecificos",
+        sortable: true,
+    },
+    {
+        name: "cantidadSuplementos",
+        align: "center",
+        label: "Cantidad de suplementos",
+        field: "cantidadSuplementos",
+        sortable: true,
+    }
+];
+
+const columnsEspecifico = [
+    {
+        name: "No",
+        required: true,
+        align: "center",
+        label: "No Especifico",
         field: "No",
         sortable: true,
     },
@@ -187,6 +293,13 @@ const columnsSuplemento = [
         sortable: true,
     },
     {
+        name: "objetoContrato",
+        align: "center",
+        label: "Objeto del Suplemento",
+        field: "objetoContrato",
+        sortable: true,
+    },
+    {
         name: "importeContrato",
         align: "center",
         label: "Importe del contrato",
@@ -215,7 +328,7 @@ const state = reactive({
     rows: [],
     oiginalRows: [],
     opcion: "",
-    opciones: ["No Proveedor", "Suplementos por contrato", "Clasificacion de contrato", "Tipo de proveedor", "Tipo de contrato", "Tipo de objeto", "Fecha de firma", "Fecha de vencimiento"],
+    opciones: ["No Proveedor", "Empresa", "Especificos por contrato", "Suplementos por especifico", "Suplementos por contrato", "Clasificacion de contrato", "Tipo de proveedor", "Tipo de contrato", "Tipo de objeto", "Fecha de firma", "Fecha de vencimiento"],
     noProveedor: "",
     noProveedorSup: "",
     clasificacionContrato: "",
@@ -230,7 +343,11 @@ const state = reactive({
     firmaF: "",
     vigenciaI: "",
     vigenciaF: "",
-    contratosActivos:0
+    contratosActivos: 0,
+    empresa: "",
+    empresas: [],
+    arrEmpresas: [],
+    arrEmpresasTemp: [],
 })
 
 function wrapCsvValue(val, formatFn, row) {
@@ -283,7 +400,22 @@ function exportTable() {
 onMounted(() => {
     getContratosActivos()
     getContratos()
+    getEmpresas()
 })
+
+function filterEmpresa(val, update) {
+    if (val === '') {
+        update(() => {
+            state.empresas = state.arrEmpresas
+        })
+        return
+    }
+
+    update(() => {
+        const needle = val.toLowerCase()
+        state.empresas = state.arrEmpresas.filter(v => v.toLowerCase().indexOf(needle) > -1)
+    })
+}
 
 function getContratosActivos(params) {
     api
@@ -307,7 +439,7 @@ function getContratosActivos(params) {
 
 function getContratos(params) {
     api
-        .get("/contracts?populate=%2A&sort[0]=vencimiento%3Aasc", authorization)
+        .get("/contracts?populate[0]=suplements&populate[1]=especificos.suplements&populate[2]=empresa&sort[0]=vencimiento%3Aasc", authorization)
         .then(function (response) {
             console.log("🚀 ~ file: reportesContratos.vue:138 ~ response:", response)
             const data = response.data.data
@@ -325,7 +457,10 @@ function getContratos(params) {
                     firma: data[index].attributes.firma,
                     vencimiento: data[index].attributes.vencimiento,
                     cantidadSuplementos: data[index].attributes.suplements.data.length,
-                    suplementos: data[index].attributes.suplements.data
+                    cantidadEspecificos: data[index].attributes.especificos.data.length,
+                    suplementos: data[index].attributes.suplements.data,
+                    especificos: data[index].attributes.especificos.data,
+                    empresa: response.data.data[index].attributes.empresa.data.attributes.nombre + ", " + response.data.data[index].attributes.empresa.data.attributes.sucursal
                 })
 
             }
@@ -365,8 +500,20 @@ function filterContractos() {
             getNoProv()
             break;
         }
+        case "Empresa": {
+            getEmpresa()
+            break;
+        }
+        case "Especificos por contrato": {
+            getEspecContrato()
+            break;
+        }
         case "Suplementos por contrato": {
             getSupContrato()
+            break;
+        }
+        case "Suplementos por especifico": {
+            getSupEspec()
             break;
         }
         case "Clasificacion de contrato": {
@@ -398,12 +545,70 @@ function filterContractos() {
     }
 }
 
+function getEspecContrato(params) {
+    state.columns = columnsEspecifico
+    state.rows = []
+    state.oiginalRows.forEach(element => {
+        if (element.No == state.noProveedorSup) {
+            for (let index = 0; index < element.especificos.length; index++) {
+                console.log(element.especificos[index]);
+                state.rows.push({
+                    id: element.especificos[index].id,
+                    No: element.especificos[index].attributes.numProveedor,
+                    clasContrato: element.especificos[index].attributes.clasificacionContrato,
+                    tipoProveedor: element.especificos[index].attributes.tipoProveedor,
+                    dictLegal: element.especificos[index].attributes.dictamenLegal,
+                    acta: element.especificos[index].attributes.acta,
+                    objetoContrato: element.especificos[index].attributes.objetoContrato,
+                    tipoContrato: element.especificos[index].attributes.tipoContrato,
+                    importeContrato: element.especificos[index].attributes.valor,
+                    firma: element.especificos[index].attributes.firma,
+                    vencimiento: element.especificos[index].attributes.vencimiento,
+                    cantidadSuplementos: element.especificos[index].attributes.suplements.data.length,
+                    suplementos: element.especificos[index].attributes.suplements.data
+                })
+                
+            }
+        }
+    });
+}
+
 function getNoProv(params) {
     state.columns = columnsProveedor
     state.rows = []
     state.oiginalRows.forEach(element => {
         if (element.No == state.noProveedor) state.rows.push(element)
     });
+}
+
+function getEmpresa(params) {
+    state.columns = columnsProveedor
+    state.rows = []
+    state.oiginalRows.forEach(element => {
+        if (element.empresa == state.empresa) state.rows.push(element)
+    });
+}
+
+function getEmpresas() {
+    state.arrEmpresasTemp = [],
+        state.arrEmpresas = []
+    api
+        .get("/empresas", authorization)
+        .then(function (response) {
+            console.log("🚀 ~ file: registroContratos.vue:267 ~ response:", response)
+            for (let index = 0; index < response.data.data.length; index++) {
+                state.arrEmpresasTemp.push({
+                    id: response.data.data[index].id,
+                    nombre: response.data.data[index].attributes.nombre + ", " + response.data.data[index].attributes.sucursal
+                });
+            }
+            state.arrEmpresasTemp.forEach(element => {
+                state.arrEmpresas.push(element.nombre)
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 function getSupContrato(params) {
@@ -418,7 +623,30 @@ function getSupContrato(params) {
                     importeContrato: element.suplementos[index].attributes.valor,
                     firma: element.suplementos[index].attributes.firma,
                     vencimiento: element.suplementos[index].attributes.vencimiento,
+                    objetoContrato: element.suplementos[index].attributes.objetoContrato
                 })
+            }
+        }
+    });
+}
+
+function getSupEspec(params) {
+    state.columns = columnsSuplemento
+    state.rows = []
+    state.oiginalRows.forEach(element => {
+        console.log(element.especificos.length);
+        for (let index = 0; index < element.especificos.length; index++) {
+            if (element.especificos[index].attributes.numProveedor == state.noProveedorSup) {
+                for (let j = 0; j < element.especificos[index].attributes.suplements.data.length; j++) {
+                state.rows.push({
+                    id: element.especificos[index].attributes.suplements.data[j].id,
+                    noContrato: element.especificos[index].attributes.suplements.data[j].attributes.noContrato,
+                    importeContrato:element.especificos[index].attributes.suplements.data[j].attributes.valor,
+                    firma: element.especificos[index].attributes.suplements.data[j].attributes.firma,
+                    vencimiento: element.especificos[index].attributes.suplements.data[j].attributes.vencimiento,
+                    objetoContrato: element.especificos[index].attributes.suplements.data[j].attributes.objetoContrato
+                })
+            }
             }
         }
     });

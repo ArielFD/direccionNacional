@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "contracts",
+  "collectionName": "especificos",
   "info": {
-    "singularName": "contract",
-    "pluralName": "contracts",
-    "displayName": "contract",
+    "singularName": "especifico",
+    "pluralName": "especificos",
+    "displayName": "especifico",
     "description": ""
   },
   "options": {
@@ -60,12 +60,6 @@
     "objetoContrato": {
       "type": "string"
     },
-    "suplements": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::suplement.suplement",
-      "mappedBy": "contract"
-    },
     "clasificacionContrato": {
       "type": "string"
     },
@@ -95,11 +89,17 @@
     "correo": {
       "type": "string"
     },
-    "especificos": {
+    "suplements": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::especifico.especifico",
-      "mappedBy": "contract"
+      "target": "api::suplement.suplement",
+      "mappedBy": "especifico"
+    },
+    "contract": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::contract.contract",
+      "inversedBy": "especificos"
     }
   }
 }

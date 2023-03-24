@@ -110,7 +110,7 @@
           </div>
           <div class="col">
             <div class="row">
-              <q-input dense v-model="state.pago" label-color="white">
+              <q-input dense v-model="state.pago" label-color="white" style="width: 800px;">
                 <template v-slot:before>
                   <p class="text-weight-bolder q-mt-md" style="font-size:medium;text-align: justify;">Forma de pago</p>
                 </template>
@@ -260,7 +260,7 @@
           </div>
           <div class="col">
             <div class="row">
-              <q-input dense v-model="state.pago" label-color="white">
+              <q-input dense v-model="state.pago" label-color="white" style="width: 800px;">
                 <template v-slot:before>
                   <p class="text-weight-bolder q-mt-md" style="font-size:medium;text-align: justify;">Forma de pago</p>
                 </template>

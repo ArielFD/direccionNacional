@@ -53,6 +53,12 @@
       "relation": "manyToOne",
       "target": "api::contract.contract",
       "inversedBy": "suplements"
+    },
+    "especifico": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::especifico.especifico",
+      "inversedBy": "suplements"
     }
   }
 }
