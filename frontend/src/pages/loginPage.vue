@@ -11,7 +11,7 @@
 
         <q-card-section>
           <form @submit.prevent.stop="onLogin">
-            <q-input class="q-mb-md" ref="nameRef" filled v-model="data.email" label="Email" lazy-rules :rules="alertRules.emailRules">
+            <q-input class="q-mb-md" ref="nameRef" filled v-model="data.email" label="User o Email" lazy-rules :rules="alertRules.emailRules">
               <template v-slot:prepend>
                 <q-icon name="mail" />
               </template>
@@ -23,14 +23,14 @@
                   @click="data.isPwd = !data.isPwd" />
               </template>
             </q-input>
-            <a href="/#/entermail" style="text-decoration: none; color: #1976D2;">Olvidaste la Contraseña?</a>
+            <!-- <a href="/#/entermail" style="text-decoration: none; color: #1976D2;">Olvidaste la Contraseña?</a> -->
             <q-separator />
             <q-card-actions>
                 <q-btn style="width: 100%;" color="primary" label="LOGIN" class="col self-center q-mt-md" type="submit" />
             </q-card-actions>
-            <div style="text-align: center; bottom: 0px;">
+            <!-- <div style="text-align: center; bottom: 0px;">
               <a href="/#/entermail" style="text-decoration: none; color: #1976D2; text-align: center;">Registrarse</a>
-            </div>
+            </div> -->
           </form>
         </q-card-section>
       </q-card>
@@ -55,8 +55,8 @@ const nameRef = ref(null);
 const passRef = ref(null);
 
 const data = reactive({
-  email: "ariel.ferrera",
-  password: "America1992",
+  email: "",
+  password: "",
   isPwd: true,
 })
 
@@ -97,7 +97,7 @@ function onLogin() {
 <style scoped>
 .my-card {
   max-width: 300px;
-  height: 400px;
+  height: 350px;
 }
 
 .container {

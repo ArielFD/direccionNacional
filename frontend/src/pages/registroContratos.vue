@@ -114,7 +114,7 @@
                 <q-checkbox v-model="state.pagos" val="En efectivo" label="En efectivo" color="primary" />
                 <q-checkbox v-model="state.pagos" val="Otros" label="Otros" color="primary" />
               </div>
-              <q-input filled dense v-model="state.valorContrato" label="Valor del contrato" class=" col-2" />
+              <q-input filled dense v-model="state.valorContrato" type="number" label="Valor del contrato" class=" col-2" />
             </div>
             <div class="row q-ma-md justify-between relative">
               <div class="col-6">
@@ -186,7 +186,7 @@
                 <q-checkbox v-model="state.pagos" val="En efectivo" label="En efectivo" color="primary" />
                 <q-checkbox v-model="state.pagos" val="Otros" label="Otros" color="primary" />
               </div>
-              <q-input filled dense v-model="state.valorContratoSup" label="Valor del contrato" class=" col-2" />
+              <q-input filled dense v-model="state.valorContratoSup" type="number" label="Valor del contrato" class=" col-2" />
             </div>
             <div class="row q-ma-md justify-between relative">
               <div class="col-6">
@@ -291,7 +291,7 @@
                 <q-checkbox v-model="state.pagos" val="En efectivo" label="En efectivo" color="primary" />
                 <q-checkbox v-model="state.pagos" val="Otros" label="Otros" color="primary" />
               </div>
-              <q-input filled dense v-model="state.valorContrato" label="Valor del contrato" class=" col-2" />
+              <q-input filled dense v-model="state.valorContrato" label="Valor del contrato" type="number" class=" col-2" />
             </div>
             <div class="row q-ma-md justify-between relative">
               <div class="col-6">
