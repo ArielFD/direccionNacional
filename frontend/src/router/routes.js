@@ -7,8 +7,9 @@ const routes = [
     children: [
       { path: '' ,name:"registro" , component: () => import('src/pages/registroContratos.vue') },
       { path: 'reportes' ,name:"reportes" , component: () => import('pages/reportesContratos.vue') },
-      { path: 'histogramas' ,name:"histogramas" , component: () => import('pages/histogramasContratos.vue') },
-      { path: 'minuta' ,name:"minuta" , component: () => import('pages/minutaContratos.vue') }
+      // { path: 'histogramas' ,name:"histogramas" , component: () => import('pages/histogramasContratos.vue') },
+      { path: 'minuta' ,name:"minuta" , component: () => import('pages/minutaContratos.vue') },
+      { path: 'usuario' ,name:"usuario" , component: () => import('pages/usuario_.vue') }
     ]
   },
   {

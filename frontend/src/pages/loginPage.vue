@@ -55,8 +55,8 @@ const nameRef = ref(null);
 const passRef = ref(null);
 
 const data = reactive({
-  email: "",
-  password: "",
+  email: "ariel.ferrera",
+  password: "America1992",
   isPwd: true,
 })
 

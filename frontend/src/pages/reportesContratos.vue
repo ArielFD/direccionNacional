@@ -1,83 +1,363 @@
 <template>
     <div class="container row items-start justify-center">
-        <q-table class="my-sticky-header-table" style="width: 90%; margin-top: 50px;" title="Plan de medidas" dense
-            :rows="state.rows" :columns="state.columns" v-model:pagination="pagination" wrap-cells>
-            <template v-slot:top>
-                <div style="width: 100%;" class="row justify-between">
-                    <div class="col-1 text-h6">
-                        <q-btn flat label="Contratos" class="col  q-pa-xs" />
-                    </div>
-                    <div class="col-3">
-                        <q-select class="text-black q-pa-xs" dense outlined v-model="state.opcion" :options="state.opciones"
-                            label="Busqueda por:">
-                            <template v-slot:after>
-                                <q-btn round dense flat icon="refresh"
-                                    @click="state.columns = columnsProveedor; state.opcion = ''; state.rows = state.oiginalRows">
-                                    <q-tooltip class="bg-primary">
-                                        Reiniciar busqueda
-                                    </q-tooltip>
+        <q-card class="q-ma-md bg-seconday" bordered style="width: 90%; margin-top: 50px;">
+            <q-card-section>
+                <q-table title="Plan de medidas" dense :rows="state.rows" :columns="state.columns"
+                    v-model:pagination="pagination" wrap-cells>
+                    <template v-slot:top>
+                        <div style="width: 100%;" class="row justify-between">
+                            <div class="col-1 text-h6">
+                                <q-btn flat label="Contratos" class="col  q-pa-xs" />
+                            </div>
+                            <div class="col-3">
+                                <q-select class="text-black q-pa-xs" dense outlined v-model="state.opcion"
+                                    :options="state.opciones" label="Busqueda por:">
+                                    <template v-slot:after>
+                                        <q-btn round dense flat icon="refresh"
+                                            @click="state.columns = columnsProveedor; state.opcion = ''; state.rows = state.oiginalRows; state.edicion = false">
+                                            <q-tooltip class="bg-primary">
+                                                Reiniciar busqueda
+                                            </q-tooltip>
 
-                                </q-btn>
-                            </template>
-                        </q-select>
-                    </div>
-                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'No Proveedor'">
-                        <q-input filled dense v-model="state.noProveedor" label="No Proveedor" class="col-2" />
-                    </div>
-                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Empresa'">
-                        <q-select class="col-6" use-input input-debounce="0" dense filled v-model="state.empresa"
-                            :options="state.empresas" @filter="filterEmpresa" label="Empresa">
-                        </q-select>
-                    </div>
-                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Suplementos por contrato'">
-                        <q-input filled dense v-model="state.noProveedorSup" label="No Proveedor" class="col-2" />
-                    </div>
-                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Especificos por contrato'">
-                        <q-input filled dense v-model="state.noProveedorSup" label="No Proveedor" class="col-2" />
-                    </div>
-                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Suplementos por especifico'">
-                        <q-input filled dense v-model="state.noProveedorSup" label="No de especifico" class="col-2" />
-                    </div>
-                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Clasificacion de contrato'">
-                        <q-select filled dense v-model="state.clasificacionContrato" :options="state.clasificacionContratos"
-                            label="Clasificacion del contrato" class="col-3" />
-                    </div>
-                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Tipo de proveedor'">
-                        <q-select filled dense v-model="state.tipoProveedor" :options="state.tipoProveedores"
-                            label="Tipo de Proveedor" class="col-3" />
-                    </div>
-                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Tipo de contrato'">
-                        <q-select filled dense v-model="state.tipoContrato" :options="state.tipoContratos"
-                            label="Tipo de contrato" class="col-2" />
-                    </div>
-                    <div class="col-2 q-pa-xs" v-if="state.opcion == 'Tipo de objeto'">
-                        <q-select filled dense v-model="state.objetoDelContrato" :options="state.objetosDelContrato"
-                            label="Objeto del contrato" class="col-3" />
-                    </div>
-                    <div class="col-3 q-pa-xs" v-if="state.opcion == 'Fecha de firma'">
-                        <div class="row">
-                            <q-input v-model="state.firmaI" filled dense type="date" hint="Desde" class="q-mr-md col" />
-                            <q-input v-model="state.firmaF" filled dense type="date" hint="Hasta" class="q-mr-md col" />
-                        </div>
-                    </div>
-                    <div class="col-3 q-pa-xs" v-if="state.opcion == 'Fecha de vencimiento'">
-                        <div class="row">
-                            <q-input v-model="state.vigenciaI" filled dense type="date" hint="Desde" class="q-mr-md col" />
-                            <q-input v-model="state.vigenciaF" filled dense type="date" hint="Hasta" class="q-mr-md col" />
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="row justify-start">
-                            <q-btn flat round color="secondary" icon="search" class="text-black q-mr-xs"
-                                @click="filterContractos()" />
-                            <q-btn color="primary" icon-right="archive" label="Exportar a Ecxel" no-caps
-                                @click="exportTable" />
+                                        </q-btn>
+                                    </template>
+                                </q-select>
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'No Proveedor'">
+                                <q-input filled dense v-model="state.noProveedor" label="No Proveedor" class="col-2" />
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'No Proveedor Especifico'">
+                                <q-input filled dense v-model="state.noProveedorEspec" label="No Proveedor Especifico"
+                                    class="col-2" />
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'No Suplemento'">
+                                <q-input filled dense v-model="state.noSuplemento" label="No Suplemento" class="col-2" />
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'Empresa'">
+                                <q-select class="col-6" use-input input-debounce="0" dense filled v-model="state.empresa"
+                                    :options="state.empresas" @filter="filterEmpresa" label="Empresa">
+                                </q-select>
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'Suplementos por contrato'">
+                                <q-input filled dense v-model="state.noProveedorSup" label="No Proveedor" class="col-2" />
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'Especificos por contrato'">
+                                <q-input filled dense v-model="state.noProveedorSup" label="No Proveedor" class="col-2" />
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'Suplementos por especifico'">
+                                <q-input filled dense v-model="state.noProveedorSup" label="No de especifico"
+                                    class="col-2" />
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'Clasificacion de contrato'">
+                                <q-select filled dense v-model="state.clasificacionContrato"
+                                    :options="state.clasificacionContratos" label="Clasificacion del contrato"
+                                    class="col-3" />
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'Tipo de proveedor'">
+                                <q-select filled dense v-model="state.tipoProveedor" :options="state.tipoProveedores"
+                                    label="Tipo de Proveedor" class="col-3" />
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'Tipo de contrato'">
+                                <q-select filled dense v-model="state.tipoContrato" :options="state.tipoContratos"
+                                    label="Tipo de contrato" class="col-2" />
+                            </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'Tipo de objeto'">
+                                <q-select filled dense v-model="state.objetoDelContrato" :options="state.objetosDelContrato"
+                                    label="Objeto del contrato" class="col-3" />
+                            </div>
+                            <div class="col-3 q-pa-xs" v-if="state.opcion == 'Fecha de firma'">
+                                <div class="row">
+                                    <q-input v-model="state.firmaI" filled dense type="date" hint="Desde"
+                                        class="q-mr-md col" />
+                                    <q-input v-model="state.firmaF" filled dense type="date" hint="Hasta"
+                                        class="q-mr-md col" />
+                                </div>
+                            </div>
+                            <div class="col-3 q-pa-xs" v-if="state.opcion == 'Fecha de vencimiento'">
+                                <div class="row">
+                                    <q-input v-model="state.vigenciaI" filled dense type="date" hint="Desde"
+                                        class="q-mr-md col" />
+                                    <q-input v-model="state.vigenciaF" filled dense type="date" hint="Hasta"
+                                        class="q-mr-md col" />
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="row justify-start">
+                                    <q-btn flat round color="secondary" icon="search" class="text-black q-mr-xs"
+                                        @click="filterContractos()" />
+                                    <q-btn color="primary" icon-right="archive" label="Exportar a Ecxel" no-caps
+                                        @click="exportTable" />
 
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </template>
+                </q-table>
+                <div class="row justify-end q-mt-md" v-if="state.edicion">
+                    <q-btn color="primary" label="Editar" no-caps @click="state.editCard = true" class="q-mr-md" />
+                    <q-btn color="primary" label="Eliminar" no-caps @click="eliminar" />
                 </div>
-            </template>
-        </q-table>
+                <q-dialog v-model="state.editCard">
+                    <div class="contract col-12">
+                        <q-card class="q-pa-md" v-if="state.opcion == 'No Proveedor'">
+                            <div class="row justify-center">
+                                <div class="col-12 row justify-center">
+                                    <h5 class="text-weight-bolder">Edicion de Contrato</h5>
+                                </div>
+                            </div>
+                            <q-separator class="q-mt-xs bg-primary" />
+                            <div>
+                                <div class="row q-ma-md justify-between ">
+                                    <q-input filled dense v-model="state.rows[0].No" label="No Proveedor" class="col-2"
+                                        mask="#######" hint="año(2)+dict(2)+consecutivo(3)" ref="numProveedor" lazy-rules
+                                        :rules="alertRules.emailRules" readonly />
+                                    <q-select filled dense v-model="state.rows[0].clasContrato"
+                                        :options="state.clasificacionContratos" label="Clasificacion del contrato"
+                                        class="col-3 q-mr-md" />
+                                    <q-select filled dense v-model="state.rows[0].tipoContrato"
+                                        :options="state.tipoContratos" label="Tipo de contrato" class="q-mr-md col-2" />
+                                    <q-select filled dense v-model="state.rows[0].tipoProveedor"
+                                        :options="state.tipoProveedores" label="Tipo de Proveedor" class="col-3" />
+                                </div>
+                                <div class="row q-ma-md justify-between ">
+                                    <q-select class="col-6" use-input input-debounce="0" dense filled
+                                        v-model="state.rows[0].empresa" :options="state.arrEmpresas" @filter="filterEmpresa"
+                                        label="Empresa">
+                                    </q-select>
+                                </div>
+                                <div class="row q-ma-md justify-between">
+                                    <q-input filled dense v-model="state.rows[0].domicilio" autogrow
+                                        label="Con domicilio legal en:" class="q-mr-md col-6" />
+                                    <q-input filled dense v-model="state.rows[0].reeup" label="Codigo REEUP"
+                                        class="q-mr-md col-2" v-if="state.tipoProveedor == 'Empresa Estatal'"
+                                        mask="###.#.#######" hint="###.#.#######" />
+                                    <q-input filled dense v-model="state.rows[0].reeup" label="Licencia"
+                                        class="q-mr-md col-2" v-if="state.tipoProveedor != 'Empresa Estatal'" />
+                                    <q-input filled dense v-model="state.rows[0].nit" label="Codigo NIT" class="col-2"
+                                        mask="###########" hint="###########" />
+                                </div>
+                                <div class="row q-ma-md justify-between">
+                                    <q-input filled dense v-model="state.rows[0].cuentaBancaria" label="Cuenta Bancaria"
+                                        class="q-mr-md col-3" mask="####-####-####-####" hint="####-####-####-####" />
+                                    <q-input filled dense v-model="state.rows[0].titular" label="Titular" class="col-8" />
+                                </div>
+                                <div class="row q-ma-md justify-between">
+                                    <q-input filled dense v-model="state.rows[0].agenciaBancaria" label="Agencia Bancaria"
+                                        class="col-2" mask="####" hint="####" />
+                                    <q-select filled dense v-model="state.rows[0].banco" :options="state.bancos"
+                                        label="Banco" class="col-3" />
+                                    <q-select filled dense v-model="state.rows[0].objetoContrato"
+                                        :options="state.objetosDelContrato" label="Objeto del contrato" class="col-5" />
+                                </div>
+                                <div class="row q-ma-md justify-between">
+                                    <q-input filled dense v-model="state.rows[0].bancoSitio" autogrow
+                                        label="Direccion del banco" class="q-mr-md col-5" />
+                                    <q-input filled dense v-model="state.rows[0].telefono" label="Telefono"
+                                        class="q-mr-md col-2" type="tel" mask="# - ### - ####" hint="# - ### - ####" />
+                                    <q-input filled dense v-model="state.rows[0].correo" label="Correo" class="col-4" />
+                                </div>
+                                <div class="row q-ma-md justify-between">
+                                    <q-input filled dense v-model="state.rows[0].dictLegal" label="Dictamen legal"
+                                        class="q-mr-md col-2" mask="###" hint="###" />
+                                    <q-input filled dense v-model="state.rows[0].acta" label="Acta" class="q-mr-md col-1"
+                                        mask="###" hint="###" />
+                                    <q-input v-model="state.rows[0].fechaActa" filled dense type="date"
+                                        hint="Fecha del Acta" class="q-mr-md col-2" />
+                                    <q-input v-model="state.rows[0].acuerdo" filled dense autogrow label="Acuerdo"
+                                        class="col-1" mask="###" hint="###" />
+                                    <q-input v-model="state.rows[0].firma" filled dense type="date" hint="Fecha de firma"
+                                        class="q-mr-md col-2" />
+                                    <q-input v-model="state.rows[0].vencimiento" filled dense type="date"
+                                        hint="Fecha de vencimiento" class="col-2" />
+                                </div>
+                                <div class="row q-ma-md justify-around">
+                                    <!-- <q-select filled dense v-model="state.pago" :options="state.pagos" label="Forma de pago"
+                class="q-mr-md col-4" /> -->
+                                    <div>
+                                        Forma de pago:
+                                        <q-checkbox v-model="state.rows[0].pago" val="Por cheque" label="Por cheque"
+                                            color="primary" />
+                                        <q-checkbox v-model="state.rows[0].pago" val="Por cheque certificado"
+                                            label="Por cheque certificado" color="primary" />
+                                        <q-checkbox v-model="state.rows[0].pago" val="Por transferencia bancaria"
+                                            label="Por transferencia bancaria" color="primary" />
+                                        <q-checkbox v-model="state.rows[0].pago" val="En efectivo" label="En efectivo"
+                                            color="primary" />
+                                        <q-checkbox v-model="state.rows[0].pago" val="Otros" label="Otros"
+                                            color="primary" />
+                                    </div>
+                                    <q-input filled dense v-model="state.rows[0].importeContrato" type="number"
+                                        label="Valor del contrato" class=" col-2" />
+                                </div>
+                                <div class="row q-ma-md justify-between relative">
+                                    <div class="col-6">
+                                        <q-input v-model="state.rows[0].observaciones" filled dense autogrow
+                                            label="Observaciones" />
+                                    </div>
+                                    <div class="absolute-bottom-right q-ma-lg">
+                                        <q-btn color="primary" label="Aceptar" @click="editar" v-close-popup />
+                                        <!-- @click="crearRegistro"  -->
+                                    </div>
+                                </div>
+                            </div>
+                        </q-card>
+                        <q-card class="q-pa-md" v-if="state.opcion == 'No Suplemento'">
+                            <div class="row justify-center">
+                                <h5 class="text-weight-bolder">Edicion de Suplemento</h5>
+                            </div>
+                            <q-separator class="q-mt-xs bg-primary" />
+                            <div class="row q-ma-md justify-start ">
+                                <q-input filled dense v-model="state.rows[0].noContrato" label="No Suplemento" readonly
+                                    class="q-mr-md col-2" ref="numContrato" lazy-rules :rules="alertRules.emailRules" />
+                                <q-select filled dense v-model="state.rows[0].tipoContrato" :options="state.tipoContratos"
+                                    label="Tipo de contrato" class="q-mr-md col-2" />
+                                <q-select filled dense v-model="state.rows[0].objetoContrato"
+                                    :options="state.objetosDelContrato" label="Objeto del Suplemento" class="col-4" />
+                            </div>
+                            <div class="row q-ma-md justify-between">
+                                <q-input filled dense v-model="state.rows[0].dictLegal" label="Dictamen legal"
+                                    class="q-mr-md col-2" mask="###" hint="###" />
+                                <q-input filled dense v-model="state.rows[0].acta" label="Acta" class="q-mr-md col-1"
+                                    mask="###" hint="###" />
+                                <q-input v-model="state.rows[0].fechaActa" filled dense type="date" hint="Fecha del Acta"
+                                    class="q-mr-md col-2" />
+                                <q-input v-model="state.rows[0].acuerdo" filled dense autogrow label="Acuerdo" class="col-1"
+                                    mask="###" hint="###" />
+                                <q-input v-model="state.rows[0].firma" filled dense type="date" hint="Fecha de firma"
+                                    class="q-mr-md col-2" />
+                                <q-input v-model="state.rows[0].vencimiento" filled dense type="date"
+                                    hint="Fecha de vencimiento" class="col-2" />
+                            </div>
+                            <div class="row q-ma-md justify-around">
+                                <!-- <q-select filled dense v-model="state.pago" :options="state.pagos" label="Forma de pago"
+                class="q-mr-md col-4" /> -->
+                                <div>
+                                    Forma de pago:
+                                    <q-checkbox v-model="state.rows[0].pago" val="Por cheque" label="Por cheque"
+                                        color="primary" />
+                                    <q-checkbox v-model="state.rows[0].pago" val="Por cheque certificado"
+                                        label="Por cheque certificado" color="primary" />
+                                    <q-checkbox v-model="state.rows[0].pago" val="Por transferencia bancaria"
+                                        label="Por transferencia bancaria" color="primary" />
+                                    <q-checkbox v-model="state.rows[0].pago" val="En efectivo" label="En efectivo"
+                                        color="primary" />
+                                    <q-checkbox v-model="state.rows[0].pago" val="Otros" label="Otros" color="primary" />
+                                </div>
+                                <q-input filled dense v-model="state.rows[0].importeContrato" type="number"
+                                    label="Valor del contrato" class=" col-1" />
+                                <q-btn color="primary" label="Aceptar" @click="editar" v-close-popup />
+                            </div>
+
+                        </q-card>
+                        <div class="contract col-12">
+                            <q-card class="q-pa-md" v-if="state.opcion == 'No Proveedor Especifico'">
+                                <div class="row justify-center">
+                                    <h5 class="text-weight-bolder">Edicion de Contrato Especifico</h5>
+                                </div>
+                                <q-separator class="q-mt-xs bg-primary" />
+                                <div>
+                                    <div class="row q-ma-md justify-between ">
+                                        <q-input filled dense v-model="state.rows[0].No" label="No Proveedor" class="col-2"
+                                            mask="#######" hint="año(2)+dict(2)+consecutivo(3)" ref="numProveedor"
+                                            lazy-rules :rules="alertRules.emailRules" readonly />
+                                        <q-select filled dense v-model="state.rows[0].clasContrato"
+                                            :options="state.clasificacionContratos" label="Clasificacion del contrato"
+                                            class="col-3 q-mr-md" />
+                                        <q-select filled dense v-model="state.rows[0].tipoContrato"
+                                            :options="state.tipoContratos" label="Tipo de contrato" class="q-mr-md col-2" />
+                                        <q-select filled dense v-model="state.rows[0].tipoProveedor"
+                                            :options="state.tipoProveedores" label="Tipo de Proveedor" class="col-3" />
+                                    </div>
+                                    <div class="row q-ma-md justify-between ">
+                                        <q-select class="col-6" use-input input-debounce="0" dense filled
+                                            v-model="state.rows[0].empresa" :options="state.arrEmpresas"
+                                            @filter="filterEmpresa" label="Empresa">
+                                        </q-select>
+                                    </div>
+                                    <div class="row q-ma-md justify-between">
+                                        <q-input filled dense v-model="state.rows[0].domicilio" autogrow
+                                            label="Con domicilio legal en:" class="q-mr-md col-6" />
+                                        <q-input filled dense v-model="state.rows[0].reeup" label="Codigo REEUP"
+                                            class="q-mr-md col-2" v-if="state.tipoProveedor == 'Empresa Estatal'"
+                                            mask="###.#.#######" hint="###.#.#######" />
+                                        <q-input filled dense v-model="state.rows[0].reeup" label="Licencia"
+                                            class="q-mr-md col-2" v-if="state.tipoProveedor != 'Empresa Estatal'" />
+                                        <q-input filled dense v-model="state.rows[0].nit" label="Codigo NIT" class="col-2"
+                                            mask="###########" hint="###########" />
+                                    </div>
+                                    <div class="row q-ma-md justify-between">
+                                        <q-input filled dense v-model="state.rows[0].cuentaBancaria" label="Cuenta Bancaria"
+                                            class="q-mr-md col-3" mask="####-####-####-####" hint="####-####-####-####" />
+                                        <q-input filled dense v-model="state.rows[0].titular" label="Titular"
+                                            class="col-8" />
+                                    </div>
+                                    <div class="row q-ma-md justify-between">
+                                        <q-input filled dense v-model="state.rows[0].agenciaBancaria"
+                                            label="Agencia Bancaria" class="col-2" mask="####" hint="####" />
+                                        <q-select filled dense v-model="state.rows[0].banco" :options="state.bancos"
+                                            label="Banco" class="col-3" />
+                                        <q-select filled dense v-model="state.rows[0].objetoContrato"
+                                            :options="state.objetosDelContrato" label="Objeto del contrato" class="col-5" />
+                                    </div>
+                                    <div class="row q-ma-md justify-between">
+                                        <q-input filled dense v-model="state.rows[0].bancoSitio" autogrow
+                                            label="Direccion del banco" class="q-mr-md col-5" />
+                                        <q-input filled dense v-model="state.rows[0].telefono" label="Telefono"
+                                            class="q-mr-md col-2" type="tel" mask="# - ### - ####" hint="# - ### - ####" />
+                                        <q-input filled dense v-model="state.rows[0].correo" label="Correo" class="col-4" />
+                                    </div>
+                                    <div class="row q-ma-md justify-between">
+                                        <q-input filled dense v-model="state.rows[0].dictLegal" label="Dictamen legal"
+                                            class="q-mr-md col-2" mask="###" hint="###" />
+                                        <q-input filled dense v-model="state.rows[0].acta" label="Acta"
+                                            class="q-mr-md col-1" mask="###" hint="###" />
+                                        <q-input v-model="state.rows[0].fechaActa" filled dense type="date"
+                                            hint="Fecha del Acta" class="q-mr-md col-2" />
+                                        <q-input v-model="state.rows[0].acuerdo" filled dense autogrow label="Acuerdo"
+                                            class="col-1" mask="###" hint="###" />
+                                        <q-input v-model="state.rows[0].firma" filled dense type="date"
+                                            hint="Fecha de firma" class="q-mr-md col-2" />
+                                        <q-input v-model="state.rows[0].vencimiento" filled dense type="date"
+                                            hint="Fecha de vencimiento" class="col-2" />
+                                    </div>
+                                    <div class="row q-ma-md justify-around">
+                                        <!-- <q-select filled dense v-model="state.pago" :options="state.pagos" label="Forma de pago"
+                class="q-mr-md col-4" /> -->
+                                        <div>
+                                            Forma de pago:
+                                            <q-checkbox v-model="state.rows[0].pago" val="Por cheque" label="Por cheque"
+                                                color="primary" />
+                                            <q-checkbox v-model="state.rows[0].pago" val="Por cheque certificado"
+                                                label="Por cheque certificado" color="primary" />
+                                            <q-checkbox v-model="state.rows[0].pago" val="Por transferencia bancaria"
+                                                label="Por transferencia bancaria" color="primary" />
+                                            <q-checkbox v-model="state.rows[0].pago" val="En efectivo" label="En efectivo"
+                                                color="primary" />
+                                            <q-checkbox v-model="state.rows[0].pago" val="Otros" label="Otros"
+                                                color="primary" />
+                                        </div>
+                                        <q-input filled dense v-model="state.rows[0].importeContrato" type="number"
+                                            label="Valor del contrato" class=" col-2" />
+                                    </div>
+                                    <div class="row q-ma-md justify-between relative">
+                                        <div class="col-6">
+                                            <q-input v-model="state.rows[0].observaciones" filled dense autogrow
+                                                label="Observaciones" />
+                                        </div>
+                                        <div class="absolute-bottom-right q-ma-lg">
+                                            <q-btn color="primary" label="Aceptar" @click="editar" v-close-popup />
+                                            <!-- @click="crearRegistro"  -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </q-card>
+                        </div>
+                    </div>
+                </q-dialog>
+            </q-card-section>
+
+        </q-card>
+
     </div>
 </template>
 
@@ -94,6 +374,7 @@ const alertRules = useAlertsRulesStore();
 const router = useRouter();
 const route = useRoute();
 const $q = useQuasar();
+const selected = ref([])
 
 const authorization = {
     headers: {
@@ -325,11 +606,16 @@ const columnsSuplemento = [
 const state = reactive({
     columns: columnsProveedor,
     actualDate: new Date,
+    edicion: false,
     rows: [],
+    especificos: [],
+    suplementos: [],
     oiginalRows: [],
     opcion: "",
-    opciones: ["No Proveedor", "Empresa", "Especificos por contrato", "Suplementos por especifico", "Suplementos por contrato", "Clasificacion de contrato", "Tipo de proveedor", "Tipo de contrato", "Tipo de objeto", "Fecha de firma", "Fecha de vencimiento"],
+    opciones: ["No Proveedor", "No Proveedor Especifico", "No Suplemento", "Empresa", "Especificos por contrato", "Suplementos por especifico", "Suplementos por contrato", "Clasificacion de contrato", "Tipo de proveedor", "Tipo de contrato", "Tipo de objeto", "Fecha de firma", "Fecha de vencimiento"],
     noProveedor: "",
+    noProveedorEspec: "",
+    noSuplemento: "",
     noProveedorSup: "",
     clasificacionContrato: "",
     clasificacionContratos: ["General", "Marco", "Base permanente"],
@@ -339,6 +625,8 @@ const state = reactive({
     tipoProveedores: ["TCP", "MIPYME", "CNA", "Empresa Estatal", "Otros"],
     objetoDelContrato: "",
     objetosDelContrato: ["Servicios Gastronómicos", "Reparación de equipos", "Compraventa de mercancías", "Hospedaje", "Reparación y Mantenimiento Constructivo", "Servicios Especializado", "Servicios Técnicos", "Transportación", "Telefonía", "Otros"],
+    banco: "",
+    bancos: ["Metropolitano", "Popular de ahorro", "Credito y Comercio", "BICSA", "BFI"],
     firmaI: "",
     firmaF: "",
     vigenciaI: "",
@@ -348,6 +636,9 @@ const state = reactive({
     empresas: [],
     arrEmpresas: [],
     arrEmpresasTemp: [],
+
+    editCard: false,
+    deleteCard: false
 })
 
 function wrapCsvValue(val, formatFn, row) {
@@ -372,6 +663,7 @@ function wrapCsvValue(val, formatFn, row) {
 
 function exportTable() {
     // naive encoding to csv format
+    console.log(state.oiginalRows, state.especificos, state.especificos, state.suplementos);
     const content = [state.columns.map(col => wrapCsvValue(col.label))].concat(
         state.rows.map(row => state.columns.map(col => wrapCsvValue(
             typeof col.field === 'function'
@@ -400,6 +692,8 @@ function exportTable() {
 onMounted(() => {
     getContratosActivos()
     getContratos()
+    getEspecificos()
+    getSuplementos()
     getEmpresas()
 })
 
@@ -437,24 +731,113 @@ function getContratosActivos(params) {
 
 }
 
+function getSuplementos(params) {
+    state.suplementos = []
+    api
+        .get("/suplements?", authorization)
+        .then(function (response) {
+            const data = response.data.data
+            for (let index = 0; index < data.length; index++) {
+                state.suplementos.push({
+                    id: data[index].id,
+                    acta: data[index].attributes.acta,
+                    acuerdo: data[index].attributes.acuerdo,
+                    dictLegal: data[index].attributes.dictamenLegal,
+                    fechaActa: data[index].attributes.fechaActa,
+                    firma: data[index].attributes.firma,
+                    noContrato: data[index].attributes.noContrato,
+                    objetoContrato: data[index].attributes.objetoContrato,
+                    observaciones: data[index].attributes.observaciones,
+                    pago: data[index].attributes.pago.split(", "),
+                    tipoContrato: data[index].attributes.tipoContrato,
+                    importeContrato: data[index].attributes.valor,
+                    vencimiento: data[index].attributes.vencimiento
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+function getEspecificos(params) {
+    state.especificos = []
+    api
+        .get("/especificos?populate[0]=empresa&populate[1]=suplements", authorization)
+        .then(function (response) {
+            const data = response.data.data
+            for (let index = 0; index < data.length; index++) {
+                state.especificos.push({
+                    id: data[index].id,
+                    No: data[index].attributes.numProveedor,
+                    acta: data[index].attributes.acta,
+                    acuerdo: data[index].attributes.acuerdo,
+                    agenciaBancaria: data[index].attributes.agenciaBancaria,
+                    banco: data[index].attributes.banco,
+                    bancoSitio: data[index].attributes.bancoSitio,
+                    clasContrato: data[index].attributes.clasificacionContrato,
+                    nit: data[index].attributes.codNIT,
+                    reeup: data[index].attributes.codREEUP,
+                    correo: data[index].attributes.correo,
+                    cuentaBancaria: data[index].attributes.cuentaBancaria,
+                    dictLegal: data[index].attributes.dictamenLegal,
+                    domicilio: data[index].attributes.domicilioLegal,
+                    fechaActa: data[index].attributes.fechaActa,
+                    firma: data[index].attributes.firma,
+                    objetoContrato: data[index].attributes.objetoContrato,
+                    observaciones: data[index].attributes.observaciones,
+                    pago: data[index].attributes.pago.split(", "),
+                    telefono: data[index].attributes.telefono,
+                    tipoContrato: data[index].attributes.tipoContrato,
+                    tipoProveedor: data[index].attributes.tipoProveedor,
+                    titular: data[index].attributes.titular,
+                    importeContrato: data[index].attributes.valor,
+                    vencimiento: data[index].attributes.vencimiento,
+                    cantidadSuplementos: data[index].attributes.suplements.data.length,
+                    empresa: data[index].attributes.empresa.data.attributes.nombre + ", " + data[index].attributes.empresa.data.attributes.sucursal
+                })
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
 function getContratos(params) {
+    state.oiginalRows = []
     api
         .get("/contracts?populate[0]=suplements&populate[1]=especificos.suplements&populate[2]=empresa&sort[0]=vencimiento%3Aasc", authorization)
         .then(function (response) {
             console.log("🚀 ~ file: reportesContratos.vue:138 ~ response:", response)
             const data = response.data.data
             for (let index = 0; index < data.length; index++) {
+                console.log("🚀 ~ file: reportesContratos.vue:813 ~ data:", data[index].attributes.pago)
+                if(data[index].attributes.pago==null) data[index].attributes.pago="Otros"
                 state.oiginalRows.push({
                     id: data[index].id,
                     No: data[index].attributes.numProveedor,
-                    clasContrato: data[index].attributes.clasificacionContrato,
-                    tipoProveedor: data[index].attributes.tipoProveedor,
-                    dictLegal: data[index].attributes.dictamenLegal,
                     acta: data[index].attributes.acta,
-                    objetoContrato: data[index].attributes.objetoContrato,
-                    tipoContrato: data[index].attributes.tipoContrato,
-                    importeContrato: data[index].attributes.valor,
+                    acuerdo: data[index].attributes.acuerdo,
+                    agenciaBancaria: data[index].attributes.agenciaBancaria,
+                    banco: data[index].attributes.banco,
+                    bancoSitio: data[index].attributes.bancoSitio,
+                    clasContrato: data[index].attributes.clasificacionContrato,
+                    nit: data[index].attributes.codNIT,
+                    reeup: data[index].attributes.codREEUP,
+                    correo: data[index].attributes.correo,
+                    cuentaBancaria: data[index].attributes.cuentaBancaria,
+                    dictLegal: data[index].attributes.dictamenLegal,
+                    domicilio: data[index].attributes.domicilioLegal,
+                    fechaActa: data[index].attributes.fechaActa,
                     firma: data[index].attributes.firma,
+                    objetoContrato: data[index].attributes.objetoContrato,
+                    observaciones: data[index].attributes.observaciones,
+                    pago: data[index].attributes.pago.split(", "),
+                    telefono: data[index].attributes.telefono,
+                    tipoContrato: data[index].attributes.tipoContrato,
+                    tipoProveedor: data[index].attributes.tipoProveedor,
+                    titular: data[index].attributes.titular,
+                    importeContrato: data[index].attributes.valor,
                     vencimiento: data[index].attributes.vencimiento,
                     cantidadSuplementos: data[index].attributes.suplements.data.length,
                     cantidadEspecificos: data[index].attributes.especificos.data.length,
@@ -498,6 +881,14 @@ function filterContractos() {
     switch (state.opcion) {
         case "No Proveedor": {
             getNoProv()
+            break;
+        }
+        case "No Proveedor Especifico": {
+            getNoProvEspec()
+            break;
+        }
+        case "No Suplemento": {
+            getNoSup()
             break;
         }
         case "Empresa": {
@@ -567,13 +958,14 @@ function getEspecContrato(params) {
                     cantidadSuplementos: element.especificos[index].attributes.suplements.data.length,
                     suplementos: element.especificos[index].attributes.suplements.data
                 })
-                
+
             }
         }
     });
 }
 
 function getNoProv(params) {
+    state.edicion = true
     state.columns = columnsProveedor
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -581,7 +973,26 @@ function getNoProv(params) {
     });
 }
 
+function getNoProvEspec(params) {
+    state.edicion = true
+    state.columns = columnsEspecifico
+    state.rows = []
+    state.especificos.forEach(element => {
+        if (element.No == state.noProveedorEspec) state.rows.push(element)
+    });
+}
+
+function getNoSup(params) {
+    state.edicion = true
+    state.columns = columnsSuplemento
+    state.rows = []
+    state.suplementos.forEach(element => {
+        if (element.noContrato == state.noSuplemento) state.rows.push(element)
+    });
+}
+
 function getEmpresa(params) {
+    state.edicion = false
     state.columns = columnsProveedor
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -612,6 +1023,7 @@ function getEmpresas() {
 }
 
 function getSupContrato(params) {
+    state.edicion = false
     state.columns = columnsSuplemento
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -631,6 +1043,7 @@ function getSupContrato(params) {
 }
 
 function getSupEspec(params) {
+    state.edicion = false
     state.columns = columnsSuplemento
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -638,21 +1051,22 @@ function getSupEspec(params) {
         for (let index = 0; index < element.especificos.length; index++) {
             if (element.especificos[index].attributes.numProveedor == state.noProveedorSup) {
                 for (let j = 0; j < element.especificos[index].attributes.suplements.data.length; j++) {
-                state.rows.push({
-                    id: element.especificos[index].attributes.suplements.data[j].id,
-                    noContrato: element.especificos[index].attributes.suplements.data[j].attributes.noContrato,
-                    importeContrato:element.especificos[index].attributes.suplements.data[j].attributes.valor,
-                    firma: element.especificos[index].attributes.suplements.data[j].attributes.firma,
-                    vencimiento: element.especificos[index].attributes.suplements.data[j].attributes.vencimiento,
-                    objetoContrato: element.especificos[index].attributes.suplements.data[j].attributes.objetoContrato
-                })
-            }
+                    state.rows.push({
+                        id: element.especificos[index].attributes.suplements.data[j].id,
+                        noContrato: element.especificos[index].attributes.suplements.data[j].attributes.noContrato,
+                        importeContrato: element.especificos[index].attributes.suplements.data[j].attributes.valor,
+                        firma: element.especificos[index].attributes.suplements.data[j].attributes.firma,
+                        vencimiento: element.especificos[index].attributes.suplements.data[j].attributes.vencimiento,
+                        objetoContrato: element.especificos[index].attributes.suplements.data[j].attributes.objetoContrato
+                    })
+                }
             }
         }
     });
 }
 
 function getClasificacion(params) {
+    state.edicion = false
     state.columns = columnsProveedor
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -661,6 +1075,7 @@ function getClasificacion(params) {
 }
 
 function tipoProveedor(params) {
+    state.edicion = false
     state.columns = columnsProveedor
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -669,6 +1084,7 @@ function tipoProveedor(params) {
 }
 
 function tipoContrato(params) {
+    state.edicion = false
     state.columns = columnsProveedor
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -677,6 +1093,7 @@ function tipoContrato(params) {
 }
 
 function tipoObjeto(params) {
+    state.edicion = false
     state.columns = columnsProveedor
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -685,6 +1102,7 @@ function tipoObjeto(params) {
 }
 
 function fecha(params) {
+    state.edicion = false
     state.columns = columnsProveedor
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -696,6 +1114,7 @@ function fecha(params) {
 }
 
 function vencimiento(params) {
+    state.edicion = false
     state.columns = columnsProveedor
     state.rows = []
     state.oiginalRows.forEach(element => {
@@ -704,6 +1123,189 @@ function vencimiento(params) {
         let end = new Date(state.vigenciaF)
         if (start <= vencimiento && end >= vencimiento) state.rows.push(element)
     });
+}
+
+function editar(params) {
+    switch (state.opcion) {
+        case "No Proveedor": {
+            let tempEntidad = ""
+            state.arrEmpresasTemp.forEach(element => {
+                if (element.nombre == state.rows[0].empresa) tempEntidad = { id: element.id }
+            });
+            const dataRest = {
+                data: {
+                    acta: state.rows[0].acta,
+                    acuerdo: state.rows[0].acuerdo,
+                    agenciaBancaria: state.rows[0].agenciaBancaria,
+                    banco: state.rows[0].banco,
+                    bancoSitio: state.rows[0].bancoSitio,
+                    clasificacionContrato: state.rows[0].clasContrato,
+                    codNIT: state.rows[0].nit,
+                    codREEUP: state.rows[0].reeup,
+                    correo: state.rows[0].correo,
+                    cuentaBancaria: state.rows[0].cuentaBancaria,
+                    dictamenLegal: state.rows[0].dictLegal,
+                    domicilioLegal: state.rows[0].domicilio,
+                    fechaActa: state.rows[0].fechaActa,
+                    firma: state.rows[0].firma,
+                    objetoContrato: state.rows[0].objetoContrato,
+                    observaciones: state.rows[0].observaciones,
+                    pago: state.rows[0].pago.join(", "),
+                    telefono: state.rows[0].telefono,
+                    tipoContrato: state.rows[0].tipoContrato,
+                    tipoProveedor: state.rows[0].tipoProveedor,
+                    titular: state.rows[0].titular,
+                    valor: state.rows[0].importeContrato,
+                    vencimiento: state.rows[0].vencimiento,
+                    empresa: tempEntidad
+                }
+            }
+            api
+                .put(`/contracts/${state.rows[0].id}`, dataRest, authorization)
+                .then(function (response) {
+                    alertRules.alerts[1].message = "Contrato Editado"
+                    $q.notify(alertRules.alerts[1]);
+                }).catch(function (error) {
+                    console.log(error);
+                    alertRules.alerts[0].message = "Error editando contrato"
+                    $q.notify(alertRules.alerts[0]);
+                });
+            break;
+        }
+        case "No Proveedor Especifico": {
+            let tempEntidad = ""
+            state.arrEmpresasTemp.forEach(element => {
+                if (element.nombre == state.rows[0].empresa) tempEntidad = { id: element.id }
+            });
+            const dataRest = {
+                data: {
+                    acta: state.rows[0].acta,
+                    acuerdo: state.rows[0].acuerdo,
+                    agenciaBancaria: state.rows[0].agenciaBancaria,
+                    banco: state.rows[0].banco,
+                    bancoSitio: state.rows[0].bancoSitio,
+                    clasificacionContrato: state.rows[0].clasContrato,
+                    codNIT: state.rows[0].nit,
+                    codREEUP: state.rows[0].reeup,
+                    correo: state.rows[0].correo,
+                    cuentaBancaria: state.rows[0].cuentaBancaria,
+                    dictamenLegal: state.rows[0].dictLegal,
+                    domicilioLegal: state.rows[0].domicilio,
+                    fechaActa: state.rows[0].fechaActa,
+                    firma: state.rows[0].firma,
+                    objetoContrato: state.rows[0].objetoContrato,
+                    observaciones: state.rows[0].observaciones,
+                    pago: state.rows[0].pago.join(", "),
+                    telefono: state.rows[0].telefono,
+                    tipoContrato: state.rows[0].tipoContrato,
+                    tipoProveedor: state.rows[0].tipoProveedor,
+                    titular: state.rows[0].titular,
+                    valor: state.rows[0].importeContrato,
+                    vencimiento: state.rows[0].vencimiento,
+                    empresa: tempEntidad
+                }
+            }
+            api
+                .put(`/especificos/${state.rows[0].id}`, dataRest, authorization)
+                .then(function (response) {
+                    alertRules.alerts[1].message = "Contrato Especifico Editado"
+                    $q.notify(alertRules.alerts[1]);
+                }).catch(function (error) {
+                    console.log(error);
+                    alertRules.alerts[0].message = "Error editando contrato especifico"
+                    $q.notify(alertRules.alerts[0]);
+                });
+            break;
+        }
+        case "No Suplemento": {
+            const dataRest = {
+                data: {
+                    acta: state.rows[0].acta,
+                    acuerdo: state.rows[0].acuerdo,
+                    dictamenLegal: state.rows[0].dictLegal,
+                    fechaActa: state.rows[0].fechaActa,
+                    firma: state.rows[0].firma,
+                    objetoContrato: state.rows[0].objetoContrato,
+                    observaciones: state.rows[0].observaciones,
+                    pago: state.rows[0].pago.join(", "),
+                    valor: state.rows[0].importeContrato,
+                    tipoContrato: state.rows[0].tipoContrato,
+                    vencimiento: state.rows[0].vencimiento
+                }
+            }
+            api
+                .put(`/suplements/${state.rows[0].id}`, dataRest, authorization)
+                .then(function (response) {
+                    alertRules.alerts[1].message = "Suplemento Editado"
+                    $q.notify(alertRules.alerts[1]);
+                }).catch(function (error) {
+                    console.log(error);
+                    alertRules.alerts[0].message = "Error editando suplemento"
+                    $q.notify(alertRules.alerts[0]);
+                });
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+function eliminar(params) {
+    switch (state.opcion) {
+        case "No Proveedor": {
+            api
+                .delete(`/contracts/${state.rows[0].id}`, authorization)
+                .then(function (response) {
+                    state.rows = []
+                    state.noProveedor = ""
+                    state.columns = columnsProveedor; state.opcion = ''; state.rows = state.oiginalRows; state.edicion = false
+                    getContratos()
+                    alertRules.alerts[1].message = "Contrato eliminado"
+                    $q.notify(alertRules.alerts[1]);
+                }).catch(function (error) {
+                    console.log(error);
+                    alertRules.alerts[0].message = "Error eliminando contrato"
+                    $q.notify(alertRules.alerts[0]);
+                });
+            break;
+        }
+        case "No Proveedor Especifico": {
+            api
+                .delete(`/especificos/${state.rows[0].id}`, authorization)
+                .then(function (response) {
+                    state.rows = []
+                    state.noProveedorEspec = ""
+                    state.columns = columnsProveedor; state.opcion = ''; state.rows = state.oiginalRows; state.edicion = false
+                    getEspecificos()
+                    alertRules.alerts[1].message = "Contrato Especifico eliminado"
+                    $q.notify(alertRules.alerts[1]);
+                }).catch(function (error) {
+                    console.log(error);
+                    alertRules.alerts[0].message = "Error eliminando contrato especifico"
+                    $q.notify(alertRules.alerts[0]);
+                });
+            break;
+        }
+        case "No Suplemento": {
+            api
+                .delete(`/suplements/${state.rows[0].id}`, authorization)
+                .then(function (response) {
+                    state.rows = []
+                    state.noSuplemento = ""
+                    state.columns = columnsProveedor; state.opcion = ''; state.rows = state.oiginalRows; state.edicion = false
+                    getSuplementos()
+                    alertRules.alerts[1].message = "Suplemento eliminado"
+                    $q.notify(alertRules.alerts[1]);
+                }).catch(function (error) {
+                    console.log(error);
+                    alertRules.alerts[0].message = "Error eliminando suplemento"
+                    $q.notify(alertRules.alerts[0]);
+                });
+            break;
+        }
+        default:
+            break;
+    }
 }
 </script>
 
