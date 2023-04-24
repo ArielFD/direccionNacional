@@ -893,20 +893,34 @@ function contratosPorTerminar(params) {
     let countVencidos = 0
     let countPorVencer = 0
     let date1 = new Date()
+    let rowsPorVencer=[]
+    let rowsVencidos=[]
     params.forEach(element => {
         let date = new Date(element.vencimiento)
         let diference = Math.ceil((date - date1) / (1000 * 3600 * 24))
         //console.log(diference);
-        if (diference < 7 && diference > 0) countPorVencer++
-        if (diference <= 0) countVencidos++
+        if (diference < 7 && diference > 0) {
+            rowsPorVencer.push(element)
+            countPorVencer++
+        }
+        if (diference <= 0) {
+            rowsVencidos.push(element)
+            countVencidos++
+        }
     });
     if (countPorVencer > 0) {
-        alertRules.alerts[2].message = "Contratos que estan por vencer: " + countPorVencer
-        $q.notify(alertRules.alerts[2]);
+        $q.notify({ color: "orange", message: "Contratos que estan por vencer: " + countPorVencer, icon: "warning",actions:[{
+            label:"Mostrar",color:'white',handler:()=>{
+                state.rows=rowsPorVencer
+            }
+        }] });
     }
     if (countVencidos > 0) {
-        alertRules.alerts[0].message = "Contratos vencidos: " + countVencidos
-        $q.notify(alertRules.alerts[0]);
+        $q.notify({ color: "negative", message: "Contratos vencidos: " + countVencidos, icon: "error",actions:[{
+            label:"Mostrar",color:'white',handler:()=>{
+                state.rows=rowsVencidos
+            }
+        }] });
     }
 }
 
