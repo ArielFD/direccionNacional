@@ -55,8 +55,8 @@ const nameRef = ref(null);
 const passRef = ref(null);
 
 const data = reactive({
-  email: "ariel.ferrera",
-  password: "America1992",
+  email: "",
+  password: "",
   isPwd: true,
 })
 
@@ -67,7 +67,7 @@ async function Login() {
       password: data.password,
     })
     .then(function (response) {
-      console.log(response);
+      //console.log(response);
       alertRules.alerts[1].message = "Sesion Iniciada, Bienvenido!!!";
       $q.notify(alertRules.alerts[1]);
       auth.jwt = response.data.jwt;
@@ -75,7 +75,7 @@ async function Login() {
       router.push("/reportes");
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
       alertRules.alerts[0].message = "Credenciales incorrectas";
       $q.notify(alertRules.alerts[0]);
     });

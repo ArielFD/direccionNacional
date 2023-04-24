@@ -34,8 +34,9 @@
         <form @submit.prevent.stop="onContract">
           <div>
             <div class="row q-ma-md justify-between ">
-              <q-input filled dense v-model="state.numProveedor" label="No Proveedor" class="col-2" mask="########"
-                hint="año(2)+dict(3)+consecutivo(3)" ref="numProveedor" lazy-rules :rules="alertRules.emailRules" />
+              <q-input filled dense v-model="state.numProveedor" label="No Proveedor" class="col-2" mask="##-###-###"
+                hint="##-###-###" ref="numProveedor" lazy-rules :rules="alertRules.emailRules" />
+                <q-input filled dense v-model="state.numCliente" label="No Cliente" class="col q-ml-md q-mr-md" />
               <q-select filled dense v-model="state.clasificacionContrato" :options="state.clasificacionContratos"
                 label="Clasificacion del contrato" class="col-3 q-mr-md" />
               <q-select filled dense v-model="state.tipoContrato" :options="state.tipoContratos" label="Tipo de contrato"
@@ -43,13 +44,14 @@
               <q-select filled dense v-model="state.tipoProveedor" :options="state.tipoProveedores"
                 label="Tipo de Proveedor" class="col-3" />
             </div>
-            <div class="row q-ma-md justify-between ">
+            <div class="row q-ma-md ">
               <q-select class="col-6" use-input input-debounce="0" dense filled v-model="state.empresa"
                 :options="state.empresas" @filter="filterEmpresa" label="Empresa">
                 <template v-slot:after>
                   <q-btn round dense flat icon="add" @click="state.cardEmpresa = true" />
                 </template>
               </q-select>
+              <q-input filled dense v-model="state.organismo" label="Organismo" class="col-2 q-ml-xl" />
             </div>
             <q-dialog v-model="state.cardEmpresa" persistent>
               <q-card style="min-width: 350px">
@@ -63,8 +65,8 @@
                 </q-card-section>
 
                 <q-card-actions align="right" class="text-primary">
-                  <q-btn flat label="Cancel" v-close-popup />
-                  <q-btn flat label="Agreegar empresa" v-close-popup @click="addEmpresa" />
+                  <q-btn flat label="Cancelar" v-close-popup />
+                  <q-btn flat label="Agregar empresa" v-close-popup @click="addEmpresa" />
                 </q-card-actions>
               </q-card>
             </q-dialog>
@@ -76,11 +78,11 @@
               <q-input filled dense v-model="state.codREEUP" label="Licencia" class="q-mr-md col-2"
                 v-if="state.tipoProveedor != 'Empresa Estatal'" />
               <q-input filled dense v-model="state.codNIT" label="Codigo NIT" class="col-2" mask="###########"
-                hint="###########" />
+                hint="###########" ref="nit" lazy-rules :rules="alertRules.emailRules"/>
             </div>
             <div class="row q-ma-md justify-between">
               <q-input filled dense v-model="state.cuentaBancaria" label="Cuenta Bancaria" class="q-mr-md col-3"
-                mask="####-####-####-####" hint="####-####-####-####" />
+                mask="####-####-####-####" hint="####-####-####-####" ref="cuenta" lazy-rules :rules="alertRules.emailRules"/>
               <q-input filled dense v-model="state.titular" label="Titular" class="col-8" />
             </div>
             <div class="row q-ma-md justify-between">
@@ -99,11 +101,11 @@
             </div>
             <div class="row q-ma-md justify-between">
               <q-input filled dense v-model="state.dictamen" label="Dictamen legal" class="q-mr-md col-2" mask="###"
-                hint="###" />
-              <q-input filled dense v-model="state.acta" label="Acta" class="q-mr-md col-1" mask="###" hint="###" />
+                hint="###" ref="dictamen" lazy-rules :rules="alertRules.emailRules"/>
+              <q-input filled dense v-model="state.acta" label="Acta" class="q-mr-md col-1" mask="###" hint="###" ref="acta" lazy-rules :rules="alertRules.emailRules"/>
               <q-input v-model="state.fechaActa" filled dense type="date" hint="Fecha del Acta" class="q-mr-md col-2" />
               <q-input v-model="state.acuerdo" filled dense autogrow label="Acuerdo" class="col-1" mask="###"
-                hint="###" />
+                hint="###" ref="acuerdo" lazy-rules :rules="alertRules.emailRules"/>
               <q-input v-model="state.fechaFirma" filled dense type="date" hint="Fecha de firma" class="q-mr-md col-2" />
               <q-input v-model="state.vigencia" filled dense type="date" hint="Fecha de vencimiento" class="col-2" />
             </div>
@@ -162,7 +164,8 @@
           <div v-if="state.opcionSuplemento == 'Suplemento'">
             <div class="row q-ma-md justify-start ">
               <q-input filled dense v-model="state.numContrato" label="No Suplemento" class="q-mr-md col-2"
-                hint="consecutivo(3)" ref="numProveedor" readonly lazy-rules :rules="alertRules.emailRules" />
+                hint="consecutivo(3)" ref="numProveedor" lazy-rules :rules="alertRules.emailRules" />
+                <q-input filled dense v-model="state.numClienteSup" label="No CLiente" class="col q-ml-md q-mr-md" />
               <q-select filled dense v-model="state.tipoContratoSup" :options="state.tipoContratos"
                 label="Tipo de contrato" class="q-mr-md col-2" />
               <q-select filled dense v-model="state.objetoDelContratoSup" :options="state.objetosDelContrato"
@@ -219,7 +222,8 @@
           <div>
             <div class="row q-ma-md justify-between ">
               <q-input filled dense v-model="state.numProveedorEdit" label="No de contrato especifico" class="col-2"
-                hint="consecutivo(3)" readonly ref="numProveedor" lazy-rules :rules="alertRules.emailRules" />
+                hint="consecutivo(3)"  ref="numProveedor" lazy-rules :rules="alertRules.emailRules" />
+                <q-input filled dense v-model="state.numClienteEdit" label="No Cliente" class="col q-ml-md q-mr-md" />
               <q-select filled dense v-model="state.clasificacionContrato" :options="state.clasificacionContratos"
                 label="Clasificacion del contrato" class="col-3 q-mr-md" />
               <q-select filled dense v-model="state.tipoContrato" :options="state.tipoContratos" label="Tipo de contrato"
@@ -234,6 +238,7 @@
                   <q-btn round dense flat icon="add" @click="state.cardEmpresa = true" />
                 </template>
               </q-select>
+              <q-input filled dense v-model="state.organismoEdit" label="Organismo" class="col-2 q-ml-xl" />
             </div>
             <q-dialog v-model="state.cardEmpresa" persistent>
               <q-card style="min-width: 350px">
@@ -338,7 +343,11 @@ const route = useRoute();
 const $q = useQuasar();
 
 const numProveedor = ref(null);
-const numContrato = ref(null);
+const nit = ref(null);
+const dictamen = ref(null);
+const acta = ref(null);
+const acuerdo = ref(null);
+const cuenta = ref(null);
 
 const state = reactive({
   buscar: false,
@@ -392,6 +401,12 @@ const state = reactive({
   fechaFirmaSup: "",
   vigenciaSup: "",
   observacionesSup: "",
+
+  numClienteEdit:"",
+  numClienteSup:"",
+  numCliente:"",
+  organismo:"",
+  organismoEdit:"",
 
   proveedores: [],
   proveedoresClass: [],
@@ -497,7 +512,12 @@ function clear() {
     state.observacionesSup = ""
   state.numContrato = ""
   state.numProveedorEdit = ""
-  state.numProveedorSup = ""
+  state.numProveedorSup = "",
+
+  state.numClienteEdit="",
+  state.numClienteSup="",
+  state.numCliente="",
+  state.organismo=""
 }
 
 function getEmpresas() {
@@ -506,7 +526,7 @@ function getEmpresas() {
   api
     .get("/empresas", authorization)
     .then(function (response) {
-      console.log("🚀 ~ file: registroContratos.vue:267 ~ response:", response)
+      //console.log("🚀 ~ file: registroContratos.vue:267 ~ response:", response)
       for (let index = 0; index < response.data.data.length; index++) {
         if (response.data.data[index].attributes.sucursal) {
           state.arrEmpresasTemp.push({
@@ -526,7 +546,7 @@ function getEmpresas() {
       });
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -540,7 +560,7 @@ function getProveedor() {
       }
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -554,7 +574,7 @@ function getEspecifico() {
       }
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -568,7 +588,7 @@ function getSuplemento() {
       }
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -588,19 +608,31 @@ function filterEmpresa(val, update) {
 
 function onContract() {
   numProveedor.value.validate();
+  nit.value.validate();
+  dictamen.value.validate();
+  acta.value.validate();
+  acuerdo.value.validate();
+  cuenta.value.validate();
+  
+  //console.log(state.numProveedor.length);
   let fechaF = new Date(state.fechaFirma)
   let fechaA = new Date(state.fechaActa)
-  if (state.numProveedor.length == 6 && state.proveedores.find(element => element == state.numProveedor)) {
+  if (state.numProveedor.length == 10 && state.proveedores.find(element => element == state.numProveedor)) {
     alertRules.alerts[0].message = "El numero de proveedor ya existe";
     $q.notify(alertRules.alerts[0]);
   }
-  else if (numProveedor.value.hasError || state.numProveedor.length != 8) {
+  if (numProveedor.value.hasError || state.numProveedor.length != 10) {
     alertRules.alerts[0].message = "El numero de proveedor se compone de 8 digitos"
     $q.notify(alertRules.alerts[0]);
-  } else if (fechaF < fechaA) {
+  }
+  if (fechaF < fechaA) {
     alertRules.alerts[0].message = "La fecha de firma debe ser mayor que la fecha de acta"
     $q.notify(alertRules.alerts[0]);
-  } else {
+  }
+  if (numProveedor.value.hasError || nit.value.hasError || dictamen.value.hasError || acta.value.hasError || acuerdo.value.hasError || cuenta.value.hasError) {
+    alertRules.alerts[0].message = "Campos obligatorios"
+    $q.notify(alertRules.alerts[0]);
+  }  else {
     crearRegistro();
   }
 }
@@ -616,6 +648,8 @@ function crearRegistro() {
     data: {
       empresa: tempEntidad,
       numProveedor: state.numProveedor,
+      organismo:state.organismo,
+      numCliente:state.numCliente,
       clasificacionContrato: state.clasificacionContrato,
       tipoProveedor: state.tipoProveedor,
       tipoContrato: state.tipoContrato,
@@ -645,7 +679,7 @@ function crearRegistro() {
   api
     .post("/contracts", dataRest, authorization)
     .then(function (response) {
-      console.log(response);
+      //console.log(response);
       alertRules.alerts[1].message = "Contrato agregada";
       $q.notify(alertRules.alerts[1]);
       clear()
@@ -654,7 +688,7 @@ function crearRegistro() {
       getProveedor()
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
       alertRules.alerts[0].message = "Error al agregar el contrato";
       $q.notify(alertRules.alerts[0]);
     });
@@ -670,7 +704,7 @@ function addEmpresa() {
   api
     .post("/empresas", dataRest, authorization)
     .then(function (response) {
-      console.log(response);
+      //console.log(response);
       getEmpresas()
       state.addEmpresa = "",
         state.addSucursal = ""
@@ -678,7 +712,7 @@ function addEmpresa() {
       $q.notify(alertRules.alerts[1]);
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
       alertRules.alerts[0].message = "Error al agregar la empresa";
       $q.notify(alertRules.alerts[0]);
     });
@@ -686,13 +720,13 @@ function addEmpresa() {
 
 function searchSup() {
   let tempID = ""
-  console.log("🚀 ~ file: registroContratos.vue:655 ~ searchSup ~ state.numProveedorSup.length:", state.numProveedorSup.length)
+  //console.log("🚀 ~ file: registroContratos.vue:655 ~ searchSup ~ state.numProveedorSup.length:", state.numProveedorSup.length)
   if (state.numProveedorSup.length < 8) {
     alertRules.alerts[0].message = "El numero de proveedor debe tener 8 digitos";
     $q.notify(alertRules.alerts[0]);
 
   } else if (!state.value) {
-    console.log("Aqui");
+    //console.log("Aqui");
     state.proveedoresClass.forEach(element => {
       if (element.numProveedor == state.numProveedorSup) tempID = element.id
     });
@@ -701,7 +735,7 @@ function searchSup() {
     // state.buscar = !state.buscar
   }
   else if (state.value) {
-    console.log("Aqui");
+    //console.log("Aqui");
     state.especificosClass.forEach(element => {
       if (element.numProveedor == state.numProveedorSup) tempID = element.id
     });
@@ -719,11 +753,12 @@ function getProveedorId(params) {
   api
     .get(`/contracts/${params}?populate=%2A`, authorization)
     .then(function (response) {
-      console.log("🚀 ~ file: registroContratos.vue:435 ~ response:", response)
+      //console.log("🚀 ~ file: registroContratos.vue:435 ~ response:", response)
       const attributes = response.data.data.attributes
-      console.log("🚀 ~ file: registroContratos.vue:689 ~ attributes:", attributes)
+      //console.log("🚀 ~ file: registroContratos.vue:689 ~ attributes:", attributes)
       state.numContrato = response.data.data.attributes.numProveedor + "" + (response.data.data.attributes.suplements.data.length + 1).toString().padStart(3, 0)
       state.tipoContratoSup = attributes.tipoContrato,
+      state.numCliente=attributes.numCliente,
         state.objetoDelContratoSup = attributes.objetoContrato,
         state.dictamenSup = attributes.dictamenLegal,
         state.actaSup = attributes.acta,
@@ -743,7 +778,7 @@ function getProveedorId(params) {
       state.pagos = attributes.pago.split(", ")
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -751,9 +786,10 @@ function getEspecificoId(params) {
   api
     .get(`/especificos/${params}?populate=%2A`, authorization)
     .then(function (response) {
-      console.log("🚀 ~ file: registroContratos.vue:435 ~ response:", response)
+      //console.log("🚀 ~ file: registroContratos.vue:435 ~ response:", response)
       const attributes = response.data.data.attributes
       state.numContrato = response.data.data.attributes.numProveedor + "" + (response.data.data.attributes.suplements.data.length + 1).toString().padStart(3, 0)
+      state.numClienteEdit=attributes.numCliente,
       state.tipoContratoSup = attributes.tipoContrato,
         state.objetoDelContratoSup = attributes.objetoContrato,
         state.dictamenSup = attributes.dictamenLegal,
@@ -775,7 +811,7 @@ function getEspecificoId(params) {
       state.pagos = attributes.pago.split(", ")
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -783,10 +819,11 @@ function getContractId(params) {
   api
     .get(`/contracts/${params}?populate=%2A`, authorization)
     .then(function (response) {
-      console.log("🚀 ~ file: registroContratos.vue:435 ~ response:", response)
+      //console.log("🚀 ~ file: registroContratos.vue:435 ~ response:", response)
       state.numProveedorEdit = response.data.data.attributes.numProveedor + "" + (response.data.data.attributes.especificos.data.length + 1).toString().padStart(3, 0),
         state.clasificacionContrato = response.data.data.attributes.clasificacionContrato,
         state.tipoContrato = response.data.data.attributes.tipoContrato,
+        state.numCliente=response.data.data.attributes.numCliente,
         state.empresa = response.data.data.attributes.empresa.data.attributes.nombre + ", " + response.data.data.attributes.empresa.data.attributes.sucursal
       state.tipoProveedor = response.data.data.attributes.tipoProveedor,
         state.domicilioLegal = response.data.data.attributes.domicilioLegal
@@ -812,7 +849,7 @@ function getContractId(params) {
       state.observaciones = response.data.data.attributes.observaciones
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -885,6 +922,7 @@ function addSuplement(params, params2) {
     dataRest = {
       data: {
         contract: params,
+        numCliente:state.numClienteSup,
         noContrato: state.numContrato,
         tipoContrato: state.tipoContratoSup,
         objetoContrato: state.objetoDelContratoSup,
@@ -903,6 +941,7 @@ function addSuplement(params, params2) {
     dataRest = {
       data: {
         especifico: params,
+        numCliente:state.numClienteSup,
         noContrato: state.numContrato,
         tipoContrato: state.tipoContratoSup,
         objetoContrato: state.objetoDelContratoSup,
@@ -922,8 +961,8 @@ function addSuplement(params, params2) {
   api
     .post("/suplements", dataRest, authorization)
     .then(function (response) {
-      console.log(response);
-      console.log("🚀 ~ file: registroContratos.vue:476 ~ response:", response)
+      //console.log(response);
+      //console.log("🚀 ~ file: registroContratos.vue:476 ~ response:", response)
       alertRules.alerts[1].message = `Suplemento agregador al contrato ${state.numProveedorSup}`;
       $q.notify(alertRules.alerts[1]);
       getProveedor()
@@ -932,7 +971,7 @@ function addSuplement(params, params2) {
       clear()
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
       alertRules.alerts[0].message = "Error al agregar el suplemento";
       $q.notify(alertRules.alerts[0]);
     });
@@ -942,7 +981,7 @@ function editContract(param) {
   state.pagoSup = state.pagos.join(", ")
   let objeto = "", pago = "", valor = "", vencimiento = "", observaciones = ""
   state.campos.indexOf("Objeto") != -1 ? objeto = state.objetoDelContratoSup : objeto = state.objetoDelContrato
-  console.log("🚀 ~ file: registroContratos.vue:776 ~ editContract ~ state.campos.indexOf('Objeto'):", state.campos.indexOf("Objeto"))
+  //console.log("🚀 ~ file: registroContratos.vue:776 ~ editContract ~ state.campos.indexOf('Objeto'):", state.campos.indexOf("Objeto"))
   state.campos.indexOf("Valor") != -1 ? pago = state.pagoSup : pago = state.pago
   state.campos.indexOf("Forma") != -1 ? valor = state.valorContratoSup : valor = state.valorContrato
   state.campos.indexOf("Vencimiento") != -1 ? vencimiento = state.vigenciaSup : vencimiento = state.vigencia
@@ -957,7 +996,7 @@ function editContract(param) {
       observaciones: observaciones
     }
   }
-  console.log("🚀 ~ file: registroContratos.vue:784 ~ editContract ~ dataRest:", dataRest)
+  //console.log("🚀 ~ file: registroContratos.vue:784 ~ editContract ~ dataRest:", dataRest)
 
 
   api
@@ -966,7 +1005,7 @@ function editContract(param) {
     })
     .catch(function (error) {
 
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -974,7 +1013,7 @@ function editEspecifico(param) {
   state.pagoSup = state.pagos.join(", ")
   let objeto = "", pago = "", valor = "", vencimiento = "", observaciones = ""
   state.campos.indexOf("Objeto") != -1 ? objeto = state.objetoDelContratoSup : objeto = state.objetoDelContrato
-  console.log("🚀 ~ file: registroContratos.vue:776 ~ editContract ~ state.campos.indexOf('Objeto'):", state.campos.indexOf("Objeto"))
+  //console.log("🚀 ~ file: registroContratos.vue:776 ~ editContract ~ state.campos.indexOf('Objeto'):", state.campos.indexOf("Objeto"))
   state.campos.indexOf("Valor") != -1 ? pago = state.pagoSup : pago = state.pago
   state.campos.indexOf("Forma") != -1 ? valor = state.valorContratoSup : valor = state.valorContrato
   state.campos.indexOf("Vencimiento") != -1 ? vencimiento = state.vigenciaSup : vencimiento = state.vigencia
@@ -989,7 +1028,7 @@ function editEspecifico(param) {
       observaciones: observaciones
     }
   }
-  console.log("🚀 ~ file: registroContratos.vue:784 ~ editContract ~ dataRest:", dataRest)
+  //console.log("🚀 ~ file: registroContratos.vue:784 ~ editContract ~ dataRest:", dataRest)
 
 
   api
@@ -998,7 +1037,7 @@ function editEspecifico(param) {
     })
     .catch(function (error) {
 
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -1023,6 +1062,8 @@ function editContractEspc(param) {
     data: {
       empresa: tempEntidad,
       contract: state.tempId,
+      numCLiente:state.numClienteEdit,
+      organismo:state.organismoEdit,
       numProveedor: state.numProveedorEdit,
       clasificacionContrato: state.clasificacionContrato,
       tipoContrato: state.tipoContrato,
@@ -1052,7 +1093,7 @@ function editContractEspc(param) {
   api
     .post(`/especificos`, dataRest, authorization)
     .then(function (response) {
-      console.log("🚀 ~ file: registroContratos.vue:859 ~ response:", response)
+      //console.log("🚀 ~ file: registroContratos.vue:859 ~ response:", response)
       alertRules.alerts[1].message = "Especificacion realizada";
       $q.notify(alertRules.alerts[1]);
       getProveedor()
@@ -1063,7 +1104,7 @@ function editContractEspc(param) {
     .catch(function (error) {
       alertRules.alerts[0].message = "Fallo en la especificacion"
       $q.notify(alertRules.alerts[0]);
-      console.log(error);
+      //console.log(error);
     });
 }
 </script>

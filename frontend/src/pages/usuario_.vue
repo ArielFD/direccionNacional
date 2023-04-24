@@ -2,186 +2,88 @@
   <div class="container row items-start justify-center">
     <q-card class="my-card1 q-ma-md" bordered>
       <q-card-section>
-        <q-table
-          title="Usuarios"
-          :rows="data.rows"
-          :columns="columns"
-          row-key="name"
-          dense
-          selection="single"
-          :selected-rows-label="getSelectedString"
-          v-model:selected="selected"
-          v-model:pagination="pagination"
-        />
+        <q-table title="Usuarios" :rows="data.rows" :columns="columns" row-key="name" dense selection="single"
+          :selected-rows-label="getSelectedString" v-model:selected="selected" v-model:pagination="pagination" />
       </q-card-section>
 
       <q-card-actions class="justify-end">
-        <q-btn
-          no-caps
-          class="text-white bg-primary"
-          @click="data.cardCreate = true"
-          >Insertar</q-btn
-        >
+        <q-btn no-caps class="text-white bg-primary" @click="data.cardCreate = true">Insertar</q-btn>
         <q-dialog v-model="data.cardCreate">
           <q-card class="my-card ">
             <q-card-section>
               <div class="text-h6">Nuevo Usuario</div>
             </q-card-section>
             <form @submit.prevent.stop="onCreate">
-            <q-card-section class="q-pa-sm">
-              <q-input
-              outlined
-              dense
-                v-model="data.username"
-                label="Nombre de Usuario"
-                class="my-input"
-                lazy-rules
-                :rules="alerts.inputRules"
-                ref="username"
-              />
-              <q-input
-              outlined
-              dense
-                v-model="data.email"
-                label="Email"
-                lazy-rules
-                :rules="alerts.emailRules"
-                ref="email"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="mail" />
-                </template>
-              </q-input>
-              <q-input
-              outlined
-              dense
-                class="q-mb-md my-input"
-                v-model="data.password"
-                prefix="Password:"
-                :type="data.isPwd ? 'password' : 'text'"
-                lazy-rules
-                :rules="alerts.passRules"
-                ref="password"
-              >
-                <template v-slot:append>
-                  <q-icon
-                    :name="data.isPwd ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="data.isPwd = !data.isPwd"
-                  />
-                </template>
-              </q-input>
-              <q-select
-              outlined
-              dense
-                v-model="data.rol"
-                :options="data.option"
-                label="Rol"
-                lazy-rules
-                :rules="alerts.inputRules"
-                ref="rol"
-              />
-            </q-card-section>
+              <q-card-section class="q-pa-sm">
+                <q-input outlined dense v-model="data.username" label="Nombre de Usuario" class="my-input" lazy-rules
+                  :rules="alerts.inputRules" ref="username" />
+                <q-input outlined dense v-model="data.email" label="Email" lazy-rules :rules="alerts.emailRules"
+                  ref="email">
+                  <template v-slot:prepend>
+                    <q-icon name="mail" />
+                  </template>
+                </q-input>
+                <q-input outlined dense class="q-mb-md my-input" v-model="data.password" prefix="Password:"
+                  :type="data.isPwd ? 'password' : 'text'" lazy-rules :rules="alerts.passRules" ref="password">
+                  <template v-slot:append>
+                    <q-icon :name="data.isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                      @click="data.isPwd = !data.isPwd" />
+                  </template>
+                </q-input>
+                <q-select outlined dense v-model="data.rol" :options="data.option" label="Rol" lazy-rules
+                  :rules="alerts.inputRules" ref="rol" />
+              </q-card-section>
 
-            <q-separator />
+              <q-separator />
 
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                color="primary"
-                label="Crear"
-                type="submit"
-              />
-            </q-card-actions>
-          </form>
+              <q-card-actions align="right">
+                <q-btn flat color="primary" label="Crear" type="submit" />
+              </q-card-actions>
+            </form>
           </q-card>
         </q-dialog>
-        <q-btn no-caps class="text-white bg-primary" @click="editFields"
-          >Editar</q-btn
-        >
+        <q-btn no-caps class="text-white bg-primary" @click="editFields">Editar</q-btn>
         <q-dialog v-model="data.cardEdit">
           <q-card class="my-card ">
             <q-card-section>
               <div class="text-h6">Editar Usuario</div>
             </q-card-section>
             <form @submit.prevent.stop="onEdit">
-            <q-card-section class="">
-              <q-input
-                outlined
-                dense
-                v-model="data.usernameEdit"
-                label="Nombre de Usuario"
-                class="my-input"
-                lazy-rules
-                :rules="alerts.inputRules"
-                ref="usernameEdit"
-              />
-              <q-input
-              outlined
-              dense
-                v-model="data.emailEdit"
-                label="Email"
-                lazy-rules
-                :rules="alerts.emailRules"
-                ref="emailEdit"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="mail" />
-                </template>
-              </q-input>
-              <q-input
-              outlined
-              dense
-                class="my-input q-mb-md"
-                v-model="data.passwordEdit"
-                prefix="Password:"
-                :type="data.isPwd ? 'password' : 'text'"
-                lazy-rules
-                :rules="alerts.passRules"
-                ref="passwordEdit"
-              >
-                <template v-slot:append>
-                  <q-icon
-                    :name="data.isPwd ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="data.isPwd = !data.isPwd"
-                  />
-                </template>
-              </q-input>
-              <q-select
-              outlined
-              dense
-                v-model="data.rolEdit"
-                :options="data.option"
-                label="Rol"
-                lazy-rules
-                :rules="alerts.inputRules"
-                ref="rolEdit"
-              />
-            </q-card-section>
+              <q-card-section class="">
+                <q-input outlined dense v-model="data.usernameEdit" label="Nombre de Usuario" class="my-input" lazy-rules
+                  :rules="alerts.inputRules" ref="usernameEdit" />
+                <q-input outlined dense v-model="data.emailEdit" label="Email" lazy-rules :rules="alerts.emailRules"
+                  ref="emailEdit">
+                  <template v-slot:prepend>
+                    <q-icon name="mail" />
+                  </template>
+                </q-input>
+                <q-input outlined dense class="my-input q-mb-md" v-model="data.passwordEdit" prefix="Password:"
+                  :type="data.isPwd ? 'password' : 'text'" lazy-rules :rules="alerts.passRules" ref="passwordEdit">
+                  <template v-slot:append>
+                    <q-icon :name="data.isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                      @click="data.isPwd = !data.isPwd" />
+                  </template>
+                </q-input>
+                <q-select outlined dense v-model="data.rolEdit" :options="data.option" label="Rol" lazy-rules
+                  :rules="alerts.inputRules" ref="rolEdit" />
+              </q-card-section>
 
-            <q-separator />
+              <q-separator />
 
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                color="primary"
-                label="Editar"
-                type="submit"
-              />
-            </q-card-actions>
-          </form>
+              <q-card-actions align="right">
+                <q-btn flat color="primary" label="Editar" type="submit" />
+              </q-card-actions>
+            </form>
           </q-card>
         </q-dialog>
-        <q-btn no-caps class="text-white bg-primary" @click="Delete"
-          >Eliminar</q-btn
-        >
+        <q-btn no-caps class="text-white bg-primary" @click="Delete">Eliminar</q-btn>
       </q-card-actions>
     </q-card>
   </div>
 </template>
   
-  <script setup>
+<script setup>
 import { onMounted, reactive, ref } from "vue";
 import { api } from "boot/axios.js";
 import { useAuthStore } from "src/stores/auth-store";
@@ -283,7 +185,7 @@ function Edit(params) {
     username: data.usernameEdit,
     password: data.passwordEdit,
     role: data.rolId
-    
+
   };
 
   const authorization = {
@@ -295,19 +197,19 @@ function Edit(params) {
   api
     .put(`/users/${selected.value[0].id}`, dataRest, authorization)
     .then(function (response) {
-      //console.log(response);
+      ////console.log(response);
       data.cardEdit = false
       alerts.alerts[1].message = "Usuario editado";
       $q.notify(alerts.alerts[1]);
       // auth.postTraza("Usuario editado", "Satisfactorio")
       getUsuarios()
-      selected.value=[]
+      selected.value = []
     })
     .catch(function (error) {
       // alerts.alerts[0].message = `Fallo editando el Usuario ${error.response.data.error.message}`;
       // $q.notify(alerts.alerts[0]);
       // auth.postTraza("Usuario editado", "Fallo")
-      console.log(error);
+      //console.log(error);
     });
 
   selected.value = []
@@ -337,7 +239,7 @@ function Create() {
   api
     .post("/users", dataRest, authorization)
     .then(function (response) {
-      //console.log(response);
+      ////console.log(response);
       data.cardCreate = false
       alerts.alerts[1].message = "Usuario creado";
       $q.notify(alerts.alerts[1]);
@@ -348,7 +250,7 @@ function Create() {
       // alerts.alerts[0].message = `Fallo creando el Usuario ${error.response.data.error.message}`;
       // $q.notify(alerts.alerts[0]);
       // auth.postTraza("Usuario creado", "Fallo")
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -369,7 +271,7 @@ function getRoles(params) {
       });
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -394,7 +296,7 @@ function getUsuarios(params) {
       }
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -410,22 +312,21 @@ function Delete(params) {
       $q.notify(alerts.alerts[1]);
       // auth.postTraza("Usuario eliminado", "Satisfactorio")
       getUsuarios()
-      selected.value=[]
+      selected.value = []
     })
     .catch(function (error) {
       alerts.alerts[0].message = "Fallo eliminando el Usuario";
       $q.notify(alerts.alerts[0]);
       // auth.postTraza("Usuario eliminado", "Fallo")
-      console.log(error);
+      //console.log(error);
     });
 }
 
 function getSelectedString() {
   return selected.value.length === 0
     ? ""
-    : `${selected.value.length} record${
-        selected.value.length > 1 ? "s" : ""
-      } selected of ${data.rows.length}`;
+    : `${selected.value.length} record${selected.value.length > 1 ? "s" : ""
+    } selected of ${data.rows.length}`;
 }
 
 function onCreate() {

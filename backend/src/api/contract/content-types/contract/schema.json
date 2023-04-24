@@ -100,6 +100,12 @@
       "relation": "oneToMany",
       "target": "api::especifico.especifico",
       "mappedBy": "contract"
+    },
+    "numCliente": {
+      "type": "string"
+    },
+    "organismo": {
+      "type": "string"
     }
   }
 }

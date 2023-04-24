@@ -100,6 +100,12 @@
       "relation": "manyToOne",
       "target": "api::contract.contract",
       "inversedBy": "especificos"
+    },
+    "numCliente": {
+      "type": "string"
+    },
+    "organismo": {
+      "type": "string"
     }
   }
 }

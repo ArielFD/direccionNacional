@@ -391,7 +391,7 @@ function getProveedor() {
     .then(function (response) {
       for (let index = 0; index < response.data.data.length; index++) {
         if (state.NoProveedor == response.data.data[index].attributes.numProveedor) {
-          console.log(response.data.data[index].attributes);
+          //console.log(response.data.data[index].attributes);
           const { acta, acuerdo, agenciaBancaria, codNIT, codREEUP, domicilioLegal, firma, vencimiento, valor, titular, pago, observaciones, objetoContrato, tipoProveedor, cuentaBancaria } = response.data.data[index].attributes
           state.acuerdo = acuerdo
           state.acta = acta
@@ -413,7 +413,7 @@ function getProveedor() {
       }
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 
@@ -422,11 +422,11 @@ function getSuplemento() {
   api
     .get("/suplements?populate=%2A", authorization)
     .then(function (response) {
-      console.log("🚀 ~ file: minutaContratos.vue:417 ~ response:", response)
+      //console.log("🚀 ~ file: minutaContratos.vue:417 ~ response:", response)
 
       for (let index = 0; index < response.data.data.length; index++) {
         if (state.NoProveedor == response.data.data[index].attributes.contract.data.attributes.numProveedor && state.suplemento == response.data.data[index].attributes.noContrato) {
-          console.log(response.data.data[index].attributes);
+          //console.log(response.data.data[index].attributes);
           const { acta, acuerdo, firma, vencimiento, valor, pago, observaciones, objetoContrato } = response.data.data[index].attributes
           state.acuerdo = acuerdo
           state.acta = acta
@@ -448,7 +448,7 @@ function getSuplemento() {
       }
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
 }
 </script>
