@@ -468,17 +468,17 @@ const columnsProveedor = [
         sortable: true,
     },
     {
-        name: "firma",
+        name: "firmaT",
         align: "center",
         label: "Fecha de firma",
-        field: "firma",
+        field: "firmaT",
         sortable: true,
     },
     {
-        name: "vencimiento",
+        name: "vencimientoT",
         align: "center",
         label: "Fecha de vencimiento",
-        field: "vencimiento",
+        field: "vencimientoT",
         sortable: true,
     },
     {
@@ -563,17 +563,17 @@ const columnsEspecifico = [
         sortable: true,
     },
     {
-        name: "firma",
+        name: "firmaT",
         align: "center",
         label: "Fecha de firma",
-        field: "firma",
+        field: "firmaT",
         sortable: true,
     },
     {
-        name: "vencimiento",
+        name: "vencimientoT",
         align: "center",
         label: "Fecha de vencimiento",
-        field: "vencimiento",
+        field: "vencimientoT",
         sortable: true,
     },
     {
@@ -615,17 +615,17 @@ const columnsSuplemento = [
         sortable: true,
     },
     {
-        name: "firma",
+        name: "firmaT",
         align: "center",
         label: "Fecha de firma",
-        field: "firma",
+        field: "firmaT",
         sortable: true,
     },
     {
-        name: "vencimiento",
+        name: "vencimientoT",
         align: "center",
         label: "Fecha de vencimiento",
-        field: "vencimiento",
+        field: "vencimientoT",
         sortable: true,
     }
 ];
@@ -772,14 +772,15 @@ function getSuplementos(params) {
                     acuerdo: data[index].attributes.acuerdo,
                     dictLegal: data[index].attributes.dictamenLegal,
                     fechaActa: data[index].attributes.fechaActa,
-                    firma: data[index].attributes.firma,
+                    firma: data[index].attributes.firma,firmaT: data[index].attributes.firma.split('-')[2]+"-"+data[index].attributes.firma.split('-')[1]+"-"+data[index].attributes.firma.split('-')[0],
                     noContrato: data[index].attributes.noContrato,
                     objetoContrato: data[index].attributes.objetoContrato,
                     observaciones: data[index].attributes.observaciones,
                     pago: data[index].attributes.pago.split(", "),
                     tipoContrato: data[index].attributes.tipoContrato,
                     importeContrato: data[index].attributes.valor,
-                    vencimiento: data[index].attributes.vencimiento
+                    vencimiento: data[index].attributes.vencimiento,
+                    vencimientoT: data[index].attributes.vencimiento.split('-')[2]+"-"+data[index].attributes.vencimiento.split('-')[1]+"-"+data[index].attributes.vencimiento.split('-')[0],
                 })
             }
         })
@@ -815,6 +816,7 @@ function getEspecificos(params) {
                     domicilio: data[index].attributes.domicilioLegal,
                     fechaActa: data[index].attributes.fechaActa,
                     firma: data[index].attributes.firma,
+                    firmaT: data[index].attributes.firma.split('-')[2]+"-"+data[index].attributes.firma.split('-')[1]+"-"+data[index].attributes.firma.split('-')[0],
                     objetoContrato: data[index].attributes.objetoContrato,
                     observaciones: data[index].attributes.observaciones,
                     pago: data[index].attributes.pago.split(", "),
@@ -824,6 +826,7 @@ function getEspecificos(params) {
                     titular: data[index].attributes.titular,
                     importeContrato: data[index].attributes.valor,
                     vencimiento: data[index].attributes.vencimiento,
+                    vencimientoT: data[index].attributes.vencimiento.split('-')[2]+"-"+data[index].attributes.vencimiento.split('-')[1]+"-"+data[index].attributes.vencimiento.split('-')[0],
                     cantidadSuplementos: data[index].attributes.suplements.data.length,
                     empresa: data[index].attributes.empresa.data.attributes.nombre + ", " + data[index].attributes.empresa.data.attributes.sucursal
                 })
@@ -863,6 +866,7 @@ function getContratos(params) {
                     domicilio: data[index].attributes.domicilioLegal,
                     fechaActa: data[index].attributes.fechaActa,
                     firma: data[index].attributes.firma,
+                    firmaT: data[index].attributes.firma.split('-')[2]+"-"+data[index].attributes.firma.split('-')[1]+"-"+data[index].attributes.firma.split('-')[0],
                     objetoContrato: data[index].attributes.objetoContrato,
                     observaciones: data[index].attributes.observaciones,
                     pago: data[index].attributes.pago.split(", "),
@@ -872,6 +876,7 @@ function getContratos(params) {
                     titular: data[index].attributes.titular,
                     importeContrato: data[index].attributes.valor,
                     vencimiento: data[index].attributes.vencimiento,
+                    vencimientoT: data[index].attributes.vencimiento.split('-')[2]+"-"+data[index].attributes.vencimiento.split('-')[1]+"-"+data[index].attributes.vencimiento.split('-')[0],
                     cantidadSuplementos: data[index].attributes.suplements.data.length,
                     cantidadEspecificos: data[index].attributes.especificos.data.length,
                     suplementos: data[index].attributes.suplements.data,
@@ -1163,6 +1168,7 @@ function editar(params) {
             });
             const dataRest = {
                 data: {
+                    numProveedor:selected.value[0].No,
                     acta: selected.value[0].acta,
                     acuerdo: selected.value[0].acuerdo,
                     numCliente: selected.value[0].numCliente,
@@ -1210,6 +1216,7 @@ function editar(params) {
             });
             const dataRest = {
                 data: {
+                    numProveedor:selected.value[0].No,
                     acta: selected.value[0].acta,
                     acuerdo: selected.value[0].acuerdo,
                     numCliente: selected.value[0].numCliente,
@@ -1253,6 +1260,7 @@ function editar(params) {
         case 'Numero de contrato': {
             const dataRest = {
                 data: {
+                    noContrato: selected.value[0].noContrato,
                     acta: selected.value[0].acta,
                     acuerdo: selected.value[0].acuerdo,
                     numCliente: selected.value[0].numCliente,
