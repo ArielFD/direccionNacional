@@ -3,11 +3,12 @@
     <q-header elevated v-if="!auth.printMode">
       <q-toolbar class="row justify-end" v-if="data.auth">
         <q-btn-group flat>
-          <q-btn icon="menu_book" label="Registro" :to="{ name: 'registro' }" padding="md" />
-          <q-btn icon="menu_book" label="Reportes" :to="{ name: 'reportes' }" padding="md" />
+          <q-btn icon="menu_book" label="Proveedores" :to="{ name: 'registroProveedor' }" padding="md" />
+          <q-btn icon="menu_book" label="Contratos" :to="{ name: 'registro' }" padding="md" />
+          <q-btn icon="menu_book" label="Buscar" :to="{ name: 'reportes' }" padding="md" />
           <!-- <q-btn icon="menu_book" label="Histogramas" :to="{ name: 'histogramas' }" padding="md"/> -->
-          <q-btn icon="menu_book" label="Minuta" :to="{ name: 'minuta' }" padding="md" />
-          <q-btn icon="settings" label="Usuario" @click="data.cardUser = true" padding="md" />
+          <q-btn icon="menu_book" label="Imprimir" :to="{ name: 'minuta' }" padding="md" />
+          <q-btn icon="settings" label="Configuracion" @click="data.cardUser = true" padding="md" />
           <q-dialog v-model="data.cardUser">
             <q-card class="my-card ">
               <q-card-section>
@@ -51,8 +52,8 @@
       </q-toolbar>
     </q-header>
 
-    <q-page-container>
-      <router-view />
+    <q-page-container class="container">
+      <router-view/>
     </q-page-container>
   </q-layout>
 </template>

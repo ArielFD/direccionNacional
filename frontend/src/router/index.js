@@ -36,6 +36,7 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     const auth=useAuthStore()
+    auth.printMode=false
     if (to.matched.some((record) => record.meta.requireAuth && auth.jwt === null)){
       next({ name: "login" });
     } else {

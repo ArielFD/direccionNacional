@@ -27,6 +27,9 @@
                             <div class="col-2 q-pa-xs" v-if="state.opcion == 'No Proveedor'">
                                 <q-input filled dense v-model="state.noProveedor" label="No Proveedor" class="col-2" />
                             </div>
+                            <div class="col-2 q-pa-xs" v-if="state.opcion == 'Nombre Proveedor'">
+                                <q-input filled dense v-model="state.nombreProveedor" label="Nombre Proveedor" class="col-2" />
+                            </div>
                             <div class="col-2 q-pa-xs" v-if="state.opcion == 'No Proveedor Especifico'">
                                 <q-input filled dense v-model="state.noProveedorEspec" label="No Proveedor Especifico"
                                     class="col-2" />
@@ -405,6 +408,14 @@ const columnsProveedor = [
         sortable: true,
     },
     {
+        name: "name",
+        required: true,
+        align: "center",
+        label: "Nombre Proveedor",
+        field: "name",
+        sortable: true,
+    },
+    {
         name: "numCliente",
         align: "center",
         label: "noCliente",
@@ -639,8 +650,9 @@ const state = reactive({
     suplementos: [],
     oiginalRows: [],
     opcion: "",
-    opciones: ["No Proveedor", "No Proveedor Especifico", "No Suplemento", "Empresa", "Especificos por contrato", "Suplementos por especifico", "Suplementos por contrato", "Clasificacion de contrato", "Tipo de proveedor", "Tipo de contrato", "Tipo de objeto", "Fecha de firma", "Fecha de vencimiento"],
+    opciones: ["No Proveedor","Nombre Proveedor", "No Proveedor Especifico", "No Suplemento", "Empresa", "Especificos por contrato", "Suplementos por especifico", "Suplementos por contrato", "Clasificacion de contrato", "Tipo de proveedor", "Tipo de contrato", "Tipo de objeto", "Fecha de firma", "Fecha de vencimiento"],
     noProveedor: "",
+    nombreProveedor:"",
     noProveedorEspec: "",
     noSuplemento: "",
     noProveedorSup: "",
@@ -840,15 +852,16 @@ function getEspecificos(params) {
 function getContratos(params) {
     state.oiginalRows = []
     api
-        .get("/contracts?populate[0]=suplements&populate[1]=especificos.suplements&populate[2]=empresa&sort[0]=vencimiento%3Aasc", authorization)
+        .get("/contracts?populate[0]=suplements&populate[1]=especificos.suplements&populate[2]=empresa&populate[3]=proveedor&sort[0]=vencimiento%3Aasc", authorization)
         .then(function (response) {
-            //console.log("🚀 ~ file: reportesContratos.vue:138 ~ response:", response)
+            console.log("🚀 ~ file: reportesContratos.vue:138 ~ response:", response)
             const data = response.data.data
             for (let index = 0; index < data.length; index++) {
                 //console.log("🚀 ~ file: reportesContratos.vue:813 ~ data:", data[index].attributes.pago)
                 if (data[index].attributes.pago == null) data[index].attributes.pago = "Otros"
                 state.oiginalRows.push({
                     id: data[index].id,
+                    name:data[index].attributes.proveedor.data.attributes.nombre,
                     No: data[index].attributes.numProveedor,
                     numCliente: data[index].attributes.numCliente,
                     organismo:data[index].attributes.organismo,
@@ -889,7 +902,7 @@ function getContratos(params) {
             contratosPorTerminar(state.rows)
         })
         .catch(function (error) {
-            //console.log(error);
+            console.log(error);
         });
 
 }
@@ -933,6 +946,10 @@ function filterContractos() {
     switch (state.opcion) {
         case "No Proveedor": {
             getNoProv()
+            break;
+        }
+        case "Nombre Proveedor": {
+            getNombreProv()
             break;
         }
         case "No Proveedor Especifico": {
@@ -1011,6 +1028,14 @@ function getNoProv(params) {
     state.rows = []
     state.oiginalRows.forEach(element => {
         if (element.No == state.noProveedor) state.rows.push(element)
+    });
+}
+
+function getNombreProv(params) {
+    state.columns = columnsProveedor
+    state.rows = []
+    state.oiginalRows.forEach(element => {
+        if (element.name == state.nombreProveedor) state.rows.push(element)
     });
 }
 

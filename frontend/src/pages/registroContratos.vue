@@ -34,17 +34,18 @@
         <form @submit.prevent.stop="onContract">
           <div>
             <div class="row q-ma-md justify-between ">
-              <q-input filled dense v-model="state.numProveedor" label="No Proveedor" class="col-2" mask="##-###-###"
-                hint="##-###-###" ref="numProveedor" lazy-rules :rules="alertRules.emailRules" />
+              <q-select filled dense v-model="state.proveedor" :options="state.listProveedores"
+                label="Proveedor" class="col-3 q-mr-md" />
+              <q-input filled dense v-model="state.numProveedor" label="No Proveedor" class="col-2" ref="numProveedor" lazy-rules :rules="alertRules.emailRules" />
                 <q-input filled dense v-model="state.numCliente" label="No Cliente" class="col q-ml-md q-mr-md" />
               <q-select filled dense v-model="state.clasificacionContrato" :options="state.clasificacionContratos"
                 label="Clasificacion del contrato" class="col-3 q-mr-md" />
               <q-select filled dense v-model="state.tipoContrato" :options="state.tipoContratos" label="Tipo de contrato"
                 class="q-mr-md col-2" />
-              <q-select filled dense v-model="state.tipoProveedor" :options="state.tipoProveedores"
-                label="Tipo de Proveedor" class="col-3" />
             </div>
             <div class="row q-ma-md ">
+              <q-select filled dense v-model="state.tipoProveedor" :options="state.tipoProveedores"
+                label="Tipo de Proveedor" class="col-3 q-mr-md" />
               <q-select class="col-6" use-input input-debounce="0" dense filled v-model="state.empresa"
                 :options="state.empresas" @filter="filterEmpresa" label="Empresa">
                 <template v-slot:after>
@@ -388,6 +389,10 @@ const state = reactive({
   acuerdo: "",
   opcionSuplemento: "Especificacion",
 
+  proveedor:"",
+  listProveedores:[],
+  arrProveedoresTemp:[],
+
   numProveedorSup: "",
   numContrato: "",
   tipoContratoSup: "",
@@ -432,16 +437,23 @@ const state = reactive({
 
 onMounted(() => {
   getEmpresas()
+  getProveedores()
   getProveedor()
   getSuplemento()
   getEspecifico()
 })
 
-watch(() => state.numProveedor, (value, oldValue) => {
-  if (value.length == 6 && state.proveedores.find(element => element == value)) {
-    alertRules.alerts[0].message = "El numero de proveedor ya existe";
-    $q.notify(alertRules.alerts[0]);
-  }
+// watch(() => state.numProveedor, (value, oldValue) => {
+//   if (value.length == 6 && state.proveedores.find(element => element == value)) {
+//     alertRules.alerts[0].message = "El numero de proveedor ya existe";
+//     $q.notify(alertRules.alerts[0]);
+//   }
+// })
+
+watch(() => state.proveedor, (value, oldValue) => {
+  state.arrProveedoresTemp.forEach(element => {
+    if(element.nombre==state.proveedor) state.numProveedor=element.numero
+  });
 })
 
 watch(() => state.value, (value, oldValue) => {
@@ -550,6 +562,30 @@ function getEmpresas() {
     });
 }
 
+function getProveedores() {
+  state.arrEmpresasTemp = [],
+    state.arrEmpresas = []
+  api
+    .get("/proveedors", authorization)
+    .then(function (response) {
+      console.log("🚀 ~ file: registroContratos.vue:565 ~ response:", response)
+      for (let index = 0; index < response.data.data.length; index++) {
+          state.arrProveedoresTemp.push({
+            id: response.data.data[index].id,
+            nombre: response.data.data[index].attributes.nombre,
+            numero: response.data.data[index].attributes.numero
+          });
+        
+      }
+      state.arrProveedoresTemp.forEach(element => {
+        state.listProveedores.push(element.nombre)
+      });
+    })
+    .catch(function (error) {
+      //console.log(error);
+    });
+}
+
 function getProveedor() {
   api
     .get("/contracts", authorization)
@@ -617,14 +653,14 @@ function onContract() {
   //console.log(state.numProveedor.length);
   let fechaF = new Date(state.fechaFirma)
   let fechaA = new Date(state.fechaActa)
-  if (state.numProveedor.length == 10 && state.proveedores.find(element => element == state.numProveedor)) {
-    alertRules.alerts[0].message = "El numero de proveedor ya existe";
-    $q.notify(alertRules.alerts[0]);
-  }
-  if (numProveedor.value.hasError || state.numProveedor.length != 10) {
-    alertRules.alerts[0].message = "El numero de proveedor se compone de 8 digitos"
-    $q.notify(alertRules.alerts[0]);
-  }
+  // if (state.numProveedor.length == 10 && state.proveedores.find(element => element == state.numProveedor)) {
+  //   alertRules.alerts[0].message = "El numero de proveedor ya existe";
+  //   $q.notify(alertRules.alerts[0]);
+  // }
+  // if (numProveedor.value.hasError || state.numProveedor.length != 10) {
+  //   alertRules.alerts[0].message = "El numero de proveedor se compone de 8 digitos"
+  //   $q.notify(alertRules.alerts[0]);
+  // }
   if (fechaF < fechaA) {
     alertRules.alerts[0].message = "La fecha de firma debe ser mayor que la fecha de acta"
     $q.notify(alertRules.alerts[0]);
@@ -639,13 +675,18 @@ function onContract() {
 
 function crearRegistro() {
   let tempEntidad = ""
+  let tempProveedor=""
   state.arrEmpresasTemp.forEach(element => {
     if (element.nombre == state.empresa) tempEntidad = { id: element.id }
+  });
+  state.arrProveedoresTemp.forEach(element => {
+    if (element.nombre == state.proveedor) tempProveedor = { id: element.id }
   });
   state.pago = state.pagos.join(", ")
 
   const dataRest = {
     data: {
+      proveedor:tempProveedor,
       empresa: tempEntidad,
       numProveedor: state.numProveedor,
       organismo:state.organismo,
@@ -688,7 +729,7 @@ function crearRegistro() {
       getProveedor()
     })
     .catch(function (error) {
-      //console.log(error);
+      console.log(error);
       alertRules.alerts[0].message = "Error al agregar el contrato";
       $q.notify(alertRules.alerts[0]);
     });
@@ -721,11 +762,12 @@ function addEmpresa() {
 function searchSup() {
   let tempID = ""
   //console.log("🚀 ~ file: registroContratos.vue:655 ~ searchSup ~ state.numProveedorSup.length:", state.numProveedorSup.length)
-  if (state.numProveedorSup.length < 8) {
-    alertRules.alerts[0].message = "El numero de proveedor debe tener 8 digitos";
-    $q.notify(alertRules.alerts[0]);
+  // if (state.numProveedorSup.length < 8) {
+  //   alertRules.alerts[0].message = "El numero de proveedor debe tener 8 digitos";
+  //   $q.notify(alertRules.alerts[0]);
 
-  } else if (!state.value) {
+  // } else 
+  if (!state.value) {
     //console.log("Aqui");
     state.proveedoresClass.forEach(element => {
       if (element.numProveedor == state.numProveedorSup) tempID = element.id
@@ -857,15 +899,15 @@ function onSupplement() {
   // numContrato.value.validate();
   let fechaF = new Date(state.fechaFirmaSup)
   let fechaA = new Date(state.fechaActaSup)
-  if (state.suplementos.find(element => element == state.numContrato)) {
-    alertRules.alerts[0].message = "El numero de contrato ya existe";
-    $q.notify(alertRules.alerts[0]);
-  }
+  // if (state.suplementos.find(element => element == state.numContrato)) {
+  //   alertRules.alerts[0].message = "El numero de contrato ya existe";
+  //   $q.notify(alertRules.alerts[0]);
+  // }
   // else if (numContrato.value.hasError) {
   //   alertRules.alerts[0].message = "Error al crear el numero de contrato"
   //   $q.notify(alertRules.alerts[0]);
   // }
-  else if (fechaF < fechaA) {
+  if (fechaF < fechaA) {
     alertRules.alerts[0].message = "La fecha de firma debe ser mayor que la fecha de acta"
     $q.notify(alertRules.alerts[0]);
   } else if (!state.value) {

@@ -12,9 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "numProveedor": {
-      "type": "string"
-    },
     "tipoContrato": {
       "type": "string"
     },
@@ -106,6 +103,15 @@
     },
     "organismo": {
       "type": "string"
+    },
+    "numProveedor": {
+      "type": "string"
+    },
+    "proveedor": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::proveedor.proveedor",
+      "inversedBy": "contracts"
     }
   }
 }

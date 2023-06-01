@@ -72,7 +72,7 @@ async function Login() {
       $q.notify(alertRules.alerts[1]);
       auth.jwt = response.data.jwt;
       auth.user = response.data.user;
-      router.push("/reportes");
+      router.push("/");
     })
     .catch(function (error) {
       //console.log(error);
