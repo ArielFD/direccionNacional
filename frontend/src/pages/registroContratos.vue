@@ -41,7 +41,7 @@
               <q-select filled dense v-model="state.clasificacionContrato" :options="state.clasificacionContratos"
                 label="Clasificacion del contrato" class="col-3 q-mr-md" />
               <q-select filled dense v-model="state.tipoContrato" :options="state.tipoContratos" label="Tipo de contrato"
-                class="q-mr-md col-2" />
+                class="q-mr-md col-2" ref="tcontrato" lazy-rules :rules="alertRules.emailRules"/>
             </div>
             <div class="row q-ma-md ">
               <q-select filled dense v-model="state.tipoProveedor" :options="state.tipoProveedores"
@@ -98,17 +98,17 @@
                 class="q-mr-md col-5" />
               <q-input filled dense v-model="state.telefono" label="Telefono" class="q-mr-md col-2" type="tel"
                 mask="# - ### - ####" hint="# - ### - ####" />
-              <q-input filled dense v-model="state.correo" label="Correo" class="col-4" />
+              <q-input filled dense v-model="state.correo" label="Correo" class="col-4" ref="email" lazy-rules :rules="alertRules.emailRules"/>
             </div>
             <div class="row q-ma-md justify-between">
               <q-input filled dense v-model="state.dictamen" label="Dictamen legal" class="q-mr-md col-2" mask="###"
                 hint="###" ref="dictamen" lazy-rules :rules="alertRules.emailRules"/>
               <q-input filled dense v-model="state.acta" label="Acta" class="q-mr-md col-1" mask="###" hint="###" ref="acta" lazy-rules :rules="alertRules.emailRules"/>
-              <q-input v-model="state.fechaActa" filled dense type="date" hint="Fecha del Acta" class="q-mr-md col-2" />
+              <q-input v-model="state.fechaActa" filled dense type="date" hint="Fecha del Acta" class="q-mr-md col-2" ref="facta" lazy-rules :rules="alertRules.emailRules"/>
               <q-input v-model="state.acuerdo" filled dense autogrow label="Acuerdo" class="col-1" mask="###"
                 hint="###" ref="acuerdo" lazy-rules :rules="alertRules.emailRules"/>
-              <q-input v-model="state.fechaFirma" filled dense type="date" hint="Fecha de firma" class="q-mr-md col-2" />
-              <q-input v-model="state.vigencia" filled dense type="date" hint="Fecha de vencimiento" class="col-2" />
+              <q-input v-model="state.fechaFirma" filled dense type="date" hint="Fecha de firma" class="q-mr-md col-2" ref="firma" lazy-rules :rules="alertRules.emailRules"/>
+              <q-input v-model="state.vigencia" filled dense type="date" hint="Fecha de vencimiento" class="col-2" ref="vencimiento" lazy-rules :rules="alertRules.emailRules"/>
             </div>
             <div class="row q-ma-md justify-around">
               <!-- <q-select filled dense v-model="state.pago" :options="state.pagos" label="Forma de pago"
@@ -349,6 +349,11 @@ const dictamen = ref(null);
 const acta = ref(null);
 const acuerdo = ref(null);
 const cuenta = ref(null);
+const tcontrato=ref(null)
+const email=ref(null)
+const vencimiento=ref(null)
+const firma=ref(null)
+const facta=ref(null)
 
 const state = reactive({
   buscar: false,
@@ -649,6 +654,11 @@ function onContract() {
   acta.value.validate();
   acuerdo.value.validate();
   cuenta.value.validate();
+  tcontrato.value.validate();
+  email.value.validate();
+  vencimiento.value.validate();
+  firma.value.validate();
+  facta.value.validate();
   
   //console.log(state.numProveedor.length);
   let fechaF = new Date(state.fechaFirma)
@@ -665,7 +675,7 @@ function onContract() {
     alertRules.alerts[0].message = "La fecha de firma debe ser mayor que la fecha de acta"
     $q.notify(alertRules.alerts[0]);
   }
-  if (numProveedor.value.hasError || nit.value.hasError || dictamen.value.hasError || acta.value.hasError || acuerdo.value.hasError || cuenta.value.hasError) {
+  if (numProveedor.value.hasError || tcontrato.value.hasError || email.value.hasError || vencimiento.value.hasError || firma.value.hasError || facta.value.hasError || nit.value.hasError || dictamen.value.hasError || acta.value.hasError || acuerdo.value.hasError || cuenta.value.hasError) {
     alertRules.alerts[0].message = "Campos obligatorios"
     $q.notify(alertRules.alerts[0]);
   }  else {
